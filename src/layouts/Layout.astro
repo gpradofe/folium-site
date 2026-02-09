@@ -3,17 +3,54 @@ interface Props {
   title: string;
 }
 const { title } = Astro.props;
+const description = "Generate PDFs from JSON templates in under 100ms. Built in Rust. No headless browsers, no Java, no legacy — just speed. Free tier available.";
+const url = "https://gpradofe.github.io/folium-site/";
+const ogImage = `${url}og-image.png`;
 ---
 <!doctype html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Folium - The fastest PDF engine. Built in Rust." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/folium-site/favicon.svg" />
-    <meta property="og:title" content="Folium - PDF Engine" />
-    <meta property="og:description" content="Generate PDFs from JSON templates in under 100ms." />
+    <link rel="canonical" href={url} />
+
+    <!-- SEO -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content="PDF generation, PDF API, Rust PDF engine, JSON to PDF, fast PDF, Folium, headless PDF, invoice generator" />
+    <meta name="author" content="Folium" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Folium" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@foliumdev" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Folium",
+      "description": description,
+      "url": url,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    })} />
   </head>
   <body class="bg-slate-950 text-white antialiased">
     <slot />

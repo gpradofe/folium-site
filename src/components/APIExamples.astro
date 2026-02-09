@@ -1,0 +1,82 @@
+---
+const examples = [
+  {
+    title: "Generate an invoice",
+    desc: "Pass structured data and get a pixel-perfect PDF back.",
+    code: `curl -X POST https://api.folium.dev/v1/generate \\
+  -H "Authorization: Bearer $FOLIUM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "template": "invoice",
+    "data": {
+      "company": "Acme Corp",
+      "items": [
+        {"name": "Widget Pro", "qty": 5, "price": 29.99},
+        {"name": "Gadget X", "qty": 2, "price": 49.99}
+      ]
+    }
+  }' -o invoice.pdf`
+  },
+  {
+    title: "List available templates",
+    desc: "See all templates in your account, including built-ins.",
+    code: `curl https://api.folium.dev/v1/templates \\
+  -H "Authorization: Bearer $FOLIUM_API_KEY"
+
+# {"templates": ["invoice", "receipt", "report", "hello"]}`
+  },
+  {
+    title: "Upload a custom template",
+    desc: "Create reusable templates with your own layout and branding.",
+    code: `curl -X POST https://api.folium.dev/v1/templates \\
+  -H "Authorization: Bearer $FOLIUM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "my-report",
+    "layout": {
+      "page": {"size": "A4", "margin": 40},
+      "header": {"text": "{{company}}", "align": "right"},
+      "body": [
+        {"type": "heading", "text": "{{title}}"},
+        {"type": "table", "rows": "{{data.rows}}"}
+      ]
+    }
+  }'`
+  },
+  {
+    title: "Generate with webhook callback",
+    desc: "For async workflows — get notified when your PDF is ready.",
+    code: `curl -X POST https://api.folium.dev/v1/generate \\
+  -H "Authorization: Bearer $FOLIUM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "template": "report",
+    "data": {"title": "Q4 Report"},
+    "webhook": "https://your-app.com/pdf-ready"
+  }'
+
+# {"job_id": "job_abc123", "status": "processing"}`
+  }
+];
+---
+
+<section id="api-examples" class="py-24 px-6 border-t border-slate-800/50">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">See it in action.</h2>
+      <p class="text-slate-400 text-lg">Real curl commands. Copy, paste, run.</p>
+    </div>
+
+    <div class="grid gap-8">
+      {examples.map((ex) => (
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="px-6 pt-6 pb-3">
+            <h3 class="text-lg font-semibold mb-1">{ex.title}</h3>
+            <p class="text-slate-400 text-sm">{ex.desc}</p>
+          </div>
+          <pre class="px-6 pb-6 text-sm overflow-x-auto"><code class="text-emerald-300/90">{ex.code}</code></pre>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

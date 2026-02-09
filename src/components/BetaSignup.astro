@@ -1,0 +1,41 @@
+---
+---
+<section id="beta" class="py-24 px-6 relative overflow-hidden">
+  <!-- Gradient blob -->
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-emerald-500/8 rounded-full blur-3xl pointer-events-none"></div>
+  
+  <div class="relative max-w-2xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-4 py-1.5 text-sm text-emerald-400 mb-6">
+      <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+      Limited beta spots available
+    </div>
+    
+    <h2 class="text-3xl md:text-4xl font-bold mb-4">Join the beta.</h2>
+    <p class="text-slate-400 text-lg mb-10 max-w-lg mx-auto">
+      Get early access to Folium, priority support, and help shape the product. No spam — just updates that matter.
+    </p>
+
+    <form 
+      action="https://formspree.io/f/xdkopqvl" 
+      method="POST" 
+      class="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto"
+    >
+      <input 
+        type="email" 
+        name="email" 
+        required 
+        placeholder="you@company.com" 
+        class="flex-1 w-full sm:w-auto bg-slate-900 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50 rounded-xl px-5 py-3.5 text-white placeholder-slate-500 outline-none transition"
+      />
+      <input type="hidden" name="_subject" value="New Folium Beta Signup" />
+      <button 
+        type="submit" 
+        class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-8 py-3.5 rounded-xl transition shadow-lg shadow-emerald-500/25 whitespace-nowrap"
+      >
+        Join Beta →
+      </button>
+    </form>
+
+    <p class="text-slate-600 text-sm mt-4">No credit card required. Unsubscribe anytime.</p>
+  </div>
+</section>
