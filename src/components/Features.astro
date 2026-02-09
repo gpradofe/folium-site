@@ -1,0 +1,49 @@
+---
+const features = [
+  {
+    title: "JSON Template → PDF",
+    desc: "Define your document structure as JSON. Pass data. Get a pixel-perfect PDF. No HTML, no CSS, no rendering engine.",
+    icon: "{ }",
+    color: "emerald"
+  },
+  {
+    title: "Sub-100ms Generation",
+    desc: "Folium generates PDFs in under 100 milliseconds. That's not a benchmark — it's production reality.",
+    icon: "⚡",
+    color: "yellow"
+  },
+  {
+    title: "668 Tests. Zero Compromises.",
+    desc: "Every template feature, edge case, and regression is covered. Ship with confidence.",
+    icon: "✓",
+    color: "blue"
+  },
+  {
+    title: "Rust Memory Safety",
+    desc: "No garbage collector. No null pointers. No buffer overflows. Just predictable, safe performance at scale.",
+    icon: "🦀",
+    color: "orange"
+  }
+];
+---
+
+<section id="features" class="py-24 px-6 bg-slate-900/30">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Why Folium?</h2>
+      <p class="text-slate-400 text-lg">Built from scratch to do one thing perfectly.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      {features.map((f) => (
+        <div class="bg-slate-950 border border-slate-800 rounded-2xl p-8 hover:border-emerald-500/30 transition">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-xl mb-5 text-emerald-400 font-mono font-bold">
+            {f.icon}
+          </div>
+          <h3 class="text-xl font-semibold mb-3">{f.title}</h3>
+          <p class="text-slate-400 leading-relaxed">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

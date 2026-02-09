@@ -1,0 +1,76 @@
+---
+const tiers = [
+  {
+    name: "Free",
+    price: "$0",
+    period: "forever",
+    desc: "For side projects and testing.",
+    features: ["100 PDFs/month", "All templates", "Community support", "API access"],
+    cta: "Start Free",
+    highlight: false
+  },
+  {
+    name: "Pro",
+    price: "$49",
+    period: "/month",
+    desc: "For growing teams and products.",
+    features: ["5,000 PDFs/month", "Custom templates", "Priority support", "Webhooks", "Analytics dashboard"],
+    cta: "Start Pro Trial",
+    highlight: true
+  },
+  {
+    name: "Enterprise",
+    price: "$299",
+    period: "/month",
+    desc: "For scale. Still cheaper than one SmartDX meeting.",
+    features: ["50,000 PDFs/month", "Custom templates", "Dedicated support", "SLA 99.9%", "SSO / SAML", "On-premise option"],
+    cta: "Contact Sales",
+    highlight: false
+  }
+];
+---
+
+<section id="pricing" class="py-24 px-6 bg-slate-900/30">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Simple, honest pricing.</h2>
+      <p class="text-slate-400 text-lg">No contracts. No surprises. Cancel anytime.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      {tiers.map((t) => (
+        <div class={`rounded-2xl p-8 transition ${
+          t.highlight 
+            ? 'bg-emerald-500/5 border-2 border-emerald-500/40 relative' 
+            : 'bg-slate-950 border border-slate-800 hover:border-slate-700'
+        }`}>
+          {t.highlight && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-slate-950 text-xs font-bold px-3 py-1 rounded-full">
+              MOST POPULAR
+            </div>
+          )}
+          <h3 class="text-lg font-semibold mb-2">{t.name}</h3>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-4xl font-bold">{t.price}</span>
+            <span class="text-slate-500">{t.period}</span>
+          </div>
+          <p class="text-slate-500 text-sm mb-6">{t.desc}</p>
+          <ul class="space-y-3 mb-8">
+            {t.features.map((f) => (
+              <li class="flex items-center gap-2 text-sm text-slate-300">
+                <span class="text-emerald-400">✓</span> {f}
+              </li>
+            ))}
+          </ul>
+          <a href="#start" class={`block text-center py-3 rounded-xl font-semibold transition ${
+            t.highlight
+              ? 'bg-emerald-500 hover:bg-emerald-400 text-slate-950'
+              : 'border border-slate-700 hover:border-slate-500 text-slate-300'
+          }`}>
+            {t.cta}
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

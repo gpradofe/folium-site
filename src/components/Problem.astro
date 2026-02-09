@@ -1,0 +1,44 @@
+---
+const problems = [
+  {
+    name: "SmartDX / Enterprise PDF",
+    pain: "$900K/year",
+    desc: "Enterprise lock-in pricing. Vendor negotiations. Procurement nightmares. For generating PDFs.",
+    icon: "💸"
+  },
+  {
+    name: "iText / Java Libraries",
+    pain: "Legacy Java",
+    desc: "GPL licensing traps. JVM overhead. Dependencies from 2008. Welcome to classpath hell.",
+    icon: "☕"
+  },
+  {
+    name: "Puppeteer / wkhtmltopdf",
+    pain: "2-5 seconds/PDF",
+    desc: "Spinning up headless Chrome to render HTML to PDF. In production. At scale. Think about that.",
+    icon: "🐌"
+  }
+];
+---
+
+<section class="py-24 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">PDF generation is stuck in the past.</h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+        Every solution is either absurdly expensive, painfully slow, or both.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      {problems.map((p) => (
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 hover:border-red-500/30 transition group">
+          <div class="text-4xl mb-4">{p.icon}</div>
+          <h3 class="text-lg font-semibold text-slate-300 mb-1">{p.name}</h3>
+          <div class="text-red-400 font-bold text-2xl mb-3">{p.pain}</div>
+          <p class="text-slate-500 leading-relaxed">{p.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

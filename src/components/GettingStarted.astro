@@ -1,0 +1,60 @@
+---
+const steps = [
+  {
+    num: "1",
+    title: "Create your account",
+    desc: "Sign up in 30 seconds. No credit card required for the free tier.",
+    code: null
+  },
+  {
+    num: "2",
+    title: "Get your API key",
+    desc: "Generate a key from your dashboard. One key, all endpoints.",
+    code: 'export FOLIUM_API_KEY="fol_sk_live_..."'
+  },
+  {
+    num: "3",
+    title: "Generate your first PDF",
+    desc: "Send a POST request and get a PDF back. Under 100ms.",
+    code: `curl -X POST https://api.folium.dev/v1/generate \\
+  -H "Authorization: Bearer $FOLIUM_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"template":"hello","data":{"name":"World"}}' \\
+  -o hello.pdf`
+  }
+];
+---
+
+<section id="start" class="py-24 px-6">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Up and running in 2 minutes.</h2>
+      <p class="text-slate-400 text-lg">Three steps. No SDK. No configuration files.</p>
+    </div>
+
+    <div class="space-y-8">
+      {steps.map((s) => (
+        <div class="flex gap-6">
+          <div class="flex-shrink-0 w-10 h-10 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-center text-emerald-400 font-bold">
+            {s.num}
+          </div>
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold mb-1">{s.title}</h3>
+            <p class="text-slate-400 mb-3">{s.desc}</p>
+            {s.code && (
+              <pre class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm overflow-x-auto">
+                <code class="text-emerald-300">{s.code}</code>
+              </pre>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-16">
+      <a href="#" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-8 py-3.5 rounded-xl text-lg transition shadow-lg shadow-emerald-500/25 inline-block">
+        Create Free Account →
+      </a>
+    </div>
+  </div>
+</section>
