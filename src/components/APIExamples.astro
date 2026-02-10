@@ -18,14 +18,6 @@ const examples = [
   }' -o invoice.pdf`
   },
   {
-    title: "List available templates",
-    desc: "See all templates in your account, including built-ins.",
-    code: `curl https://api.folium.dev/v1/templates \\
-  -H "Authorization: Bearer $FOLIUM_API_KEY"
-
-# {"templates": ["invoice", "receipt", "report", "hello"]}`
-  },
-  {
     title: "Upload a custom template",
     desc: "Create reusable templates with your own layout and branding.",
     code: `curl -X POST https://api.folium.dev/v1/templates \\
@@ -35,7 +27,7 @@ const examples = [
     "name": "my-report",
     "layout": {
       "page": {"size": "A4", "margin": 40},
-      "header": {"text": "{{company}}", "align": "right"},
+      "header": {"text": "{{company}}"},
       "body": [
         {"type": "heading", "text": "{{title}}"},
         {"type": "table", "rows": "{{data.rows}}"}
@@ -44,8 +36,8 @@ const examples = [
   }'`
   },
   {
-    title: "Generate with webhook callback",
-    desc: "For async workflows — get notified when your PDF is ready.",
+    title: "Async with webhook callback",
+    desc: "Fire-and-forget. Get notified when your PDF is ready.",
     code: `curl -X POST https://api.folium.dev/v1/generate \\
   -H "Authorization: Bearer $FOLIUM_API_KEY" \\
   -H "Content-Type: application/json" \\
@@ -60,21 +52,24 @@ const examples = [
 ];
 ---
 
-<section id="api-examples" class="py-24 px-6 border-t border-slate-800/50">
+<section id="api-examples" class="py-28 px-6">
   <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">See it in action.</h2>
+    <div class="text-center mb-16 animate-on-scroll">
+      <div class="inline-flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-1.5 text-sm text-slate-400 mb-6">
+        API examples
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">See it in <span class="gradient-text">action.</span></h2>
       <p class="text-slate-400 text-lg">Real curl commands. Copy, paste, run.</p>
     </div>
 
-    <div class="grid gap-8">
+    <div class="grid gap-6 stagger-children">
       {examples.map((ex) => (
-        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl overflow-hidden">
+        <div class="animate-on-scroll bg-slate-900/40 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-emerald-500/20 transition-colors">
           <div class="px-6 pt-6 pb-3">
             <h3 class="text-lg font-semibold mb-1">{ex.title}</h3>
             <p class="text-slate-400 text-sm">{ex.desc}</p>
           </div>
-          <pre class="px-6 pb-6 text-sm overflow-x-auto"><code class="text-emerald-300/90">{ex.code}</code></pre>
+          <pre class="px-6 pb-6 text-sm overflow-x-auto"><code class="text-emerald-300/80 font-mono">{ex.code}</code></pre>
         </div>
       ))}
     </div>

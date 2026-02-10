@@ -6,48 +6,51 @@ const faqs = [
   },
   {
     q: "Can I self-host Folium?",
-    a: "Absolutely. Folium ships as a single binary with zero dependencies. Run it on your own infrastructure with <code class='text-emerald-300 bg-slate-800 px-1.5 py-0.5 rounded'>docker run -p 8080:8080 folium/engine</code> and you're live. Enterprise plans include dedicated support for on-premise deployments."
+    a: "Absolutely. Folium ships as a single binary with zero dependencies. Run <code class='text-emerald-300 bg-slate-800 px-1.5 py-0.5 rounded text-xs'>docker run -p 8080:8080 folium/engine</code> and you're live. Enterprise plans include dedicated support for on-premise deployments."
   },
   {
-    q: "How does pricing work? Are there hidden fees?",
-    a: "No hidden fees. You pay per plan based on monthly PDF volume. The Free tier (100 PDFs/month) requires no credit card. Pro and Enterprise plans are billed monthly with no contracts — cancel anytime. Overages are billed at $0.01/PDF."
+    q: "How does pricing work?",
+    a: "No hidden fees. Free tier gives you 100 PDFs/month with no credit card. Pro ($49/mo) gives you 10,000 PDFs. Enterprise ($299/mo) is unlimited. Overages on Pro are billed at $0.005/PDF. Cancel anytime."
   },
   {
-    q: "What happens if I exceed my plan's PDF limit?",
-    a: "You won't get cut off. Overages are billed at $0.01 per additional PDF. You can also set hard limits in your dashboard to prevent unexpected charges."
+    q: "What happens if I exceed my plan's limit?",
+    a: "You won't get cut off. On Pro, overages are billed at $0.005 per additional PDF. You can set hard limits in your dashboard to prevent unexpected charges. Enterprise is unlimited."
   },
   {
-    q: "How fast is Folium compared to Puppeteer or wkhtmltopdf?",
+    q: "How fast is Folium compared to Puppeteer?",
     a: "Folium generates PDFs in under 100ms — typically 20-50ms for standard documents. Puppeteer averages 2-5 seconds per PDF because it spins up a headless browser. That's a 50-100x improvement."
   },
   {
     q: "What template formats does Folium support?",
-    a: "Folium uses JSON-based templates. You define layout, typography, tables, images, and dynamic data bindings declaratively. No HTML or CSS required — though we offer an HTML-to-Folium migration tool."
+    a: "Folium uses JSON-based templates. Define layout, typography, tables, images, and dynamic data bindings declaratively. No HTML/CSS required — though we offer an HTML-to-Folium migration tool."
   },
   {
     q: "Is there an SLA?",
-    a: "Enterprise plans include a 99.9% uptime SLA with dedicated support. Pro plans target 99.5% uptime. Status is tracked publicly at <span class='text-slate-500'>status.folium.dev</span>."
+    a: "Enterprise plans include a 99.9% uptime SLA with dedicated support. Pro plans target 99.5% uptime. Status is tracked publicly at status.folium.dev."
   }
 ];
 ---
 
-<section id="faq" class="py-24 px-6">
+<section id="faq" class="py-28 px-6">
   <div class="max-w-3xl mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Frequently asked questions.</h2>
+    <div class="text-center mb-16 animate-on-scroll">
+      <div class="inline-flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-1.5 text-sm text-slate-400 mb-6">
+        FAQ
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">Got questions?</h2>
       <p class="text-slate-400 text-lg">Everything you need to know about Folium.</p>
     </div>
 
-    <div class="space-y-4">
+    <div class="space-y-3 stagger-children">
       {faqs.map((faq) => (
-        <details class="group bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
+        <details class="animate-on-scroll group bg-slate-900/40 border border-slate-800/80 rounded-xl overflow-hidden hover:border-slate-700 transition-colors">
           <summary class="flex items-center justify-between cursor-pointer px-6 py-5 text-left font-semibold hover:text-emerald-400 transition list-none">
             <span>{faq.q}</span>
             <svg class="w-5 h-5 text-slate-500 group-open:rotate-45 transition-transform flex-shrink-0 ml-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path d="M12 5v14M5 12h14" />
             </svg>
           </summary>
-          <div class="px-6 pb-5 text-slate-400 leading-relaxed" set:html={faq.a} />
+          <div class="px-6 pb-5 text-slate-400 leading-relaxed text-sm" set:html={faq.a} />
         </details>
       ))}
     </div>
