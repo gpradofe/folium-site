@@ -1,0 +1,75 @@
+---
+const steps = [
+  {
+    num: "01",
+    title: "Define your template",
+    desc: "Create a JSON template that describes your document layout — headers, tables, images, dynamic fields. Or use one of our 11+ built-in templates.",
+    code: `{
+  "layout": {
+    "page": { "size": "A4", "margin": 40 },
+    "body": [
+      { "type": "heading", "text": "{{title}}" },
+      { "type": "table", "rows": "{{items}}" }
+    ]
+  }
+}`
+  },
+  {
+    num: "02",
+    title: "Send your data",
+    desc: "Make a single POST request with your template name and data. That's the entire integration. No SDK required.",
+    code: `curl -X POST https://api.folium.dev/v1/generate \\
+  -H "Authorization: Bearer fol_sk_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{"template":"invoice","data":{...}}'`
+  },
+  {
+    num: "03",
+    title: "Get your PDF",
+    desc: "Receive a production-ready PDF in under 100ms. Streamed directly or delivered via webhook for async workflows.",
+    code: `HTTP/1.1 200 OK
+Content-Type: application/pdf
+X-Generation-Time: 23ms
+Content-Length: 42891
+
+%PDF-1.7 ...`
+  }
+];
+---
+
+<section id="how-it-works" class="py-28 px-6 relative">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-20 animate-on-scroll">
+      <div class="inline-flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-1.5 text-sm text-slate-400 mb-6">
+        Dead simple
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">Three steps.<br/><span class="gradient-text">That's it.</span></h2>
+      <p class="text-slate-400 text-lg">No configuration files. No SDK downloads. No 50-page setup guides.</p>
+    </div>
+
+    <div class="space-y-12">
+      {steps.map((s) => (
+        <div class="animate-on-scroll flex gap-6 md:gap-8">
+          <div class="flex-shrink-0">
+            <div class="w-14 h-14 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-emerald-400 font-mono font-bold text-lg">
+              {s.num}
+            </div>
+            <div class="w-px h-full bg-gradient-to-b from-emerald-500/30 to-transparent mx-auto mt-3 hidden md:block"></div>
+          </div>
+          <div class="flex-1 pb-4">
+            <h3 class="text-xl font-bold mb-2">{s.title}</h3>
+            <p class="text-slate-400 mb-5 leading-relaxed">{s.desc}</p>
+            <div class="bg-slate-900/60 border border-slate-800 rounded-xl overflow-hidden">
+              <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800/50 bg-slate-900/30">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+              </div>
+              <pre class="p-4 text-sm overflow-x-auto"><code class="text-emerald-300/80 font-mono">{s.code}</code></pre>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
