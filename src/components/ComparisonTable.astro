@@ -1,0 +1,128 @@
+---
+const comparisons = [
+  {
+    feature: "License Cost",
+    folium: "$0-$299/mo",
+    smartdx: "$900,000/license",
+    wkhtmltopdf: "Free (GPL)",
+    puppeteer: "Free (Apache)"
+  },
+  {
+    feature: "Performance",
+    folium: "<100ms",
+    smartdx: "2-10 seconds",
+    wkhtmltopdf: "1-5 seconds",
+    puppeteer: "2-15 seconds"
+  },
+  {
+    feature: "Template System",
+    folium: "JSON-driven",
+    smartdx: "Proprietary XML",
+    wkhtmltopdf: "HTML/CSS",
+    puppeteer: "HTML/CSS/JS"
+  },
+  {
+    feature: "Runtime Dependencies",
+    folium: "None (SaaS)",
+    smartdx: "Java Runtime",
+    wkhtmltopdf: "Qt libraries",
+    puppeteer: "Chromium + Node.js"
+  },
+  {
+    feature: "Horizontal Scaling",
+    folium: "Auto-scaling",
+    smartdx: "Manual clusters",
+    wkhtmltopdf: "Process limits",
+    puppeteer: "Memory intensive"
+  },
+  {
+    feature: "Memory Usage",
+    folium: "~5MB per PDF",
+    smartdx: "~200MB per PDF",
+    wkhtmltopdf: "~50MB per PDF",
+    puppeteer: "~100MB per PDF"
+  },
+  {
+    feature: "Enterprise Support",
+    folium: "24/7 SLA",
+    smartdx: "Enterprise only",
+    wkhtmltopdf: "Community",
+    puppeteer: "Community"
+  },
+  {
+    feature: "Setup Time",
+    folium: "<5 minutes",
+    smartdx: "Weeks",
+    wkhtmltopdf: "Hours",
+    puppeteer: "Hours"
+  }
+];
+---
+
+<section id="comparison" class="py-28 px-6 relative">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/20 to-transparent pointer-events-none"></div>
+  
+  <div class="relative max-w-7xl mx-auto">
+    <div class="text-center mb-20 animate-on-scroll">
+      <div class="inline-flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-1.5 text-sm text-slate-400 mb-6">
+        Why choose Folium
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">Stop paying<br/><span class="gradient-text">enterprise prices</span></h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">The same capabilities as $900K solutions, for 99.97% less.</p>
+    </div>
+
+    <div class="animate-on-scroll overflow-x-auto">
+      <div class="min-w-[800px] bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
+        <!-- Header -->
+        <div class="grid grid-cols-5 border-b border-slate-800">
+          <div class="p-6 font-semibold text-slate-300">Feature</div>
+          <div class="p-6 text-center bg-emerald-500/5 border-x border-emerald-500/20">
+            <div class="font-bold text-emerald-400 text-lg">Folium</div>
+            <div class="text-xs text-emerald-500 mt-1">This product</div>
+          </div>
+          <div class="p-6 text-center border-x border-slate-800">
+            <div class="font-semibold text-slate-300">SmartDX</div>
+            <div class="text-xs text-slate-500 mt-1">Enterprise PDF</div>
+          </div>
+          <div class="p-6 text-center border-x border-slate-800">
+            <div class="font-semibold text-slate-300">wkhtmltopdf</div>
+            <div class="text-xs text-slate-500 mt-1">Open source</div>
+          </div>
+          <div class="p-6 text-center">
+            <div class="font-semibold text-slate-300">Puppeteer</div>
+            <div class="text-xs text-slate-500 mt-1">Headless Chrome</div>
+          </div>
+        </div>
+
+        <!-- Rows -->
+        {comparisons.map((row, index) => (
+          <div class={`grid grid-cols-5 ${index < comparisons.length - 1 ? 'border-b border-slate-800' : ''}`}>
+            <div class="p-4 font-medium text-slate-300">{row.feature}</div>
+            <div class="p-4 text-center bg-emerald-500/5 border-x border-emerald-500/20">
+              <span class="text-emerald-400 font-semibold">{row.folium}</span>
+              {row.feature === "License Cost" && (
+                <div class="w-5 h-5 bg-emerald-500 rounded-full mx-auto mt-2 flex items-center justify-center">
+                  <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" class="text-slate-900">
+                    <path d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div class="p-4 text-center text-slate-400 border-x border-slate-800">{row.smartdx}</div>
+            <div class="p-4 text-center text-slate-400 border-x border-slate-800">{row.wkhtmltopdf}</div>
+            <div class="p-4 text-center text-slate-400">{row.puppeteer}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="mt-12 text-center animate-on-scroll">
+      <div class="inline-flex items-center gap-3 bg-slate-900/50 border border-slate-800 rounded-xl px-6 py-4 text-sm">
+        <span class="text-slate-500">Ready to switch?</span>
+        <span class="text-white font-semibold">Save 99.97% vs SmartDX.</span>
+        <a href="#beta" class="text-emerald-400 hover:text-emerald-300 font-semibold">Start free →</a>
+      </div>
+    </div>
+  </div>
+</section>
