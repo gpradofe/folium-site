@@ -1,0 +1,38 @@
+---
+const templates = [
+  { name: "Invoice", icon: "📄", desc: "Line items, taxes, totals" },
+  { name: "Receipt", icon: "🧾", desc: "Transaction confirmations" },
+  { name: "Report", icon: "📊", desc: "Charts, tables, summaries" },
+  { name: "Contract", icon: "📝", desc: "Legal documents, signatures" },
+  { name: "Certificate", icon: "🏆", desc: "Awards, completions" },
+  { name: "Label", icon: "🏷️", desc: "Shipping, product labels" },
+  { name: "Letter", icon: "✉️", desc: "Business correspondence" },
+  { name: "Statement", icon: "🏦", desc: "Account statements" },
+  { name: "Proposal", icon: "💼", desc: "Business proposals" },
+  { name: "Ticket", icon: "🎫", desc: "Events, support tickets" },
+  { name: "Resume", icon: "👤", desc: "CV / resume formats" },
+  { name: "Custom", icon: "🔧", desc: "Build your own" },
+];
+---
+
+<section id="templates" class="py-28 px-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 animate-on-scroll">
+      <div class="inline-flex items-center gap-2 bg-slate-800/50 border border-slate-700/50 rounded-full px-4 py-1.5 text-sm text-slate-400 mb-6">
+        11+ built-in templates
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">Every document type.<br/><span class="gradient-text">Ready to go.</span></h2>
+      <p class="text-slate-400 text-lg max-w-2xl mx-auto">Pre-built templates for the most common document types. Customize them or create your own from scratch.</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 stagger-children">
+      {templates.map((t) => (
+        <div class="animate-on-scroll group bg-slate-900/40 border border-slate-800/80 rounded-xl p-4 text-center hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all duration-300 cursor-default">
+          <div class="text-2xl mb-2">{t.icon}</div>
+          <div class="text-sm font-semibold mb-1">{t.name}</div>
+          <div class="text-xs text-slate-500">{t.desc}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

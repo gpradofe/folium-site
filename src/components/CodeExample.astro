@@ -1,5 +1,7 @@
 ---
-const codeHtml = `<span class="text-emerald-400">$</span> curl -X POST https://api.folium.dev/v1/generate \\
+const codeHtml = `<span class="text-slate-500">// One API call. That's the entire integration.</span>
+
+<span class="text-emerald-400">$</span> curl -X POST https://api.folium.dev/v1/generate \\
   -H <span class="text-yellow-300">"Authorization: Bearer fol_sk_live_..."</span> \\
   -H <span class="text-yellow-300">"Content-Type: application/json"</span> \\
   -d <span class="text-yellow-300">'&#123;
@@ -12,31 +14,34 @@ const codeHtml = `<span class="text-emerald-400">$</span> curl -X POST https://a
       ],
       "due_date": "2026-03-01"
     &#125;
-  &#125;'</span>
+  &#125;'</span> -o invoice.pdf
 
-<span class="text-slate-500"># Response: 200 OK (47ms)</span>
-<span class="text-slate-500"># Content-Type: application/pdf</span>
-<span class="text-slate-500"># X-Generation-Time: 23ms</span>`;
+<span class="text-slate-500"># ✓ 200 OK — 23ms</span>
+<span class="text-slate-500"># ✓ Content-Type: application/pdf</span>
+<span class="text-slate-500"># ✓ invoice.pdf saved (42 KB, 2 pages)</span>`;
 ---
 
-<section class="py-24 px-6">
+<section class="py-28 px-6">
   <div class="max-w-4xl mx-auto">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">One API call. That's it.</h2>
-      <p class="text-slate-400 text-lg">No SDK required. Just HTTP.</p>
+    <div class="text-center mb-12 animate-on-scroll">
+      <h2 class="text-4xl md:text-5xl font-bold mb-5">One API call.<br/><span class="gradient-text">That's it.</span></h2>
+      <p class="text-slate-400 text-lg">No SDK required. No dependencies. Just HTTP.</p>
     </div>
 
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-      <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-800 bg-slate-900/50">
-        <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-        <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-        <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
-        <span class="ml-3 text-sm text-slate-500 font-mono">terminal</span>
+    <div class="animate-on-scroll relative">
+      <div class="absolute -inset-3 bg-emerald-500/5 rounded-3xl blur-xl pointer-events-none"></div>
+      <div class="relative bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm">
+        <div class="flex items-center gap-2 px-5 py-3 border-b border-slate-800 bg-slate-900/50">
+          <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500/60"></div>
+          <span class="ml-3 text-sm text-slate-500 font-mono">terminal</span>
+        </div>
+        <pre class="p-6 text-sm md:text-base overflow-x-auto"><code class="text-slate-300" set:html={codeHtml} /></pre>
       </div>
-      <pre class="p-6 text-sm md:text-base overflow-x-auto"><code class="text-slate-300" set:html={codeHtml} /></pre>
     </div>
 
-    <p class="text-center text-slate-500 mt-6 text-sm">
+    <p class="text-center text-slate-500 mt-8 text-sm animate-on-scroll">
       23ms to generate a multi-page invoice. Try doing that with Puppeteer.
     </p>
   </div>

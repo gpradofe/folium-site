@@ -1,18 +1,69 @@
 ---
 ---
-<nav class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300">
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="#" class="text-xl font-bold">
-      <span class="text-emerald-400">◆</span> Folium
+    <a href="#" class="text-xl font-bold flex items-center gap-2">
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" class="text-emerald-400">
+        <rect x="2" y="4" width="20" height="26" rx="2" stroke="currentColor" stroke-width="2.5" fill="none"/>
+        <rect x="10" y="2" width="20" height="26" rx="2" stroke="currentColor" stroke-width="2.5" fill="rgba(16,185,129,0.15)"/>
+        <line x1="14" y1="9" x2="26" y2="9" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+        <line x1="14" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+        <line x1="14" y1="19" x2="22" y2="19" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+      </svg>
+      <span>Folium</span>
     </a>
+    
+    <!-- Mobile menu button -->
+    <button id="mobile-menu-btn" class="md:hidden text-slate-400 hover:text-white transition" aria-label="Toggle menu">
+      <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+
+    <!-- Desktop nav -->
     <div class="hidden md:flex items-center gap-8 text-sm text-slate-400">
       <a href="#features" class="hover:text-white transition">Features</a>
+      <a href="#templates" class="hover:text-white transition">Templates</a>
       <a href="#pricing" class="hover:text-white transition">Pricing</a>
-      <a href="#start" class="hover:text-white transition">Get Started</a>
-      <a href="https://github.com/gpradofe/folium" class="hover:text-white transition">GitHub</a>
-      <a href="#start" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 py-2 rounded-lg transition">
+      <a href="#faq" class="hover:text-white transition">FAQ</a>
+      <a href="https://github.com/gpradofe/folium" class="hover:text-white transition flex items-center gap-1.5">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+      <a href="#beta" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2 rounded-lg transition shadow-lg shadow-emerald-500/20">
+        Start Free
+      </a>
+    </div>
+  </div>
+
+  <!-- Mobile nav -->
+  <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/50">
+    <div class="px-6 py-4 space-y-3">
+      <a href="#features" class="block text-slate-400 hover:text-white transition py-2">Features</a>
+      <a href="#templates" class="block text-slate-400 hover:text-white transition py-2">Templates</a>
+      <a href="#pricing" class="block text-slate-400 hover:text-white transition py-2">Pricing</a>
+      <a href="#faq" class="block text-slate-400 hover:text-white transition py-2">FAQ</a>
+      <a href="#beta" class="block bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-3 rounded-lg transition text-center mt-4">
         Start Free
       </a>
     </div>
   </div>
 </nav>
+
+<script>
+  // Navbar background on scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      navbar?.classList.add('bg-slate-950/80', 'backdrop-blur-xl', 'border-b', 'border-slate-800/50');
+    } else {
+      navbar?.classList.remove('bg-slate-950/80', 'backdrop-blur-xl', 'border-b', 'border-slate-800/50');
+    }
+  });
+
+  // Mobile menu toggle
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+  menu?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu?.classList.add('hidden')));
+</script>
