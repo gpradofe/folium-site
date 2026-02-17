@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Changelog — Folium Version History">
+  <Nav />
+  <main class="pt-24 pb-20">
+    <!-- Hero -->
+    <section class="max-w-4xl mx-auto px-6 text-center mb-16">
+      <div class="animate-on-scroll">
+        <span class="inline-block text-emerald-400 text-sm font-semibold tracking-wider uppercase mb-4">Version History</span>
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6">
+          <span class="gradient-text">Changelog</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+          Track every feature, fix, and improvement across Folium releases.
+        </p>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="max-w-4xl mx-auto px-6">
+      <div class="relative border-l-2 border-slate-800 ml-4 space-y-12">
+
+        <!-- v0.5.0 -->
+        <div class="relative pl-8">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900"></div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <h2 class="text-2xl font-bold text-white">v0.5.0</h2>
+            <span class="text-sm text-slate-500">February 17, 2026</span>
+            <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-medium">Latest</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              CI/CD pipeline with GitHub Actions
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/38" class="text-emerald-400 hover:underline text-sm">#38</a>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Comprehensive error handling and validation
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/36" class="text-emerald-400 hover:underline text-sm">#36</a>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Template gallery with pre-built designs
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/35" class="text-emerald-400 hover:underline text-sm">#35</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- v0.4.0 -->
+        <div class="relative pl-8">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-600 border-2 border-slate-900"></div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <h2 class="text-2xl font-bold text-white">v0.4.0</h2>
+            <span class="text-sm text-slate-500">February 10, 2026</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              WebAssembly (WASM) target for browser-side PDF generation
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/30" class="text-emerald-400 hover:underline text-sm">#30</a>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Performance benchmarks — Folium vs Puppeteer, WeasyPrint &amp; iText
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/29" class="text-emerald-400 hover:underline text-sm">#29</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- v0.3.0 -->
+        <div class="relative pl-8">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-600 border-2 border-slate-900"></div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <h2 class="text-2xl font-bold text-white">v0.3.0</h2>
+            <span class="text-sm text-slate-500">February 3, 2026</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              End-to-end test suite for PDF output validation
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/27" class="text-emerald-400 hover:underline text-sm">#27</a>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Production hardening — graceful shutdown, health checks, logging
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/26" class="text-emerald-400 hover:underline text-sm">#26</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- v0.2.0 -->
+        <div class="relative pl-8">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-600 border-2 border-slate-900"></div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <h2 class="text-2xl font-bold text-white">v0.2.0</h2>
+            <span class="text-sm text-slate-500">January 27, 2026</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Docker support with multi-stage builds
+              <a href="https://github.com/gpradofe/pdfGenerator/pull/25" class="text-emerald-400 hover:underline text-sm">#25</a>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              REST API with JSON template input
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Basic template engine with variable interpolation
+            </li>
+          </ul>
+        </div>
+
+        <!-- v0.1.0 -->
+        <div class="relative pl-8">
+          <div class="absolute -left-[9px] top-1 w-4 h-4 rounded-full bg-slate-600 border-2 border-slate-900"></div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <h2 class="text-2xl font-bold text-white">v0.1.0</h2>
+            <span class="text-sm text-slate-500">January 20, 2026</span>
+            <span class="text-xs bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full font-medium">Initial Release</span>
+          </div>
+          <ul class="space-y-2 text-slate-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Rust PDF engine with core rendering pipeline
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              JSON-to-PDF conversion with layout primitives (text, images, tables)
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              Sub-100ms generation for typical documents
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-1">→</span>
+              CLI interface for local PDF generation
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
