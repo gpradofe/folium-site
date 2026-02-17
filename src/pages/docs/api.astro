@@ -1,0 +1,252 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL ?? '/folium-site';
+---
+<Layout title="API Reference — Folium">
+  <div class="min-h-screen bg-slate-950 text-slate-200">
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href={`${base}/`} class="text-xl font-bold text-white">
+          <span class="text-cyan-400">◈</span> Folium
+        </a>
+        <nav class="flex gap-6 text-sm">
+          <a href={`${base}/`} class="text-slate-400 hover:text-white transition-colors">Home</a>
+          <a href={`${base}/docs/getting-started`} class="text-slate-400 hover:text-white transition-colors">Getting Started</a>
+          <a href={`${base}/docs/template-guide`} class="text-slate-400 hover:text-white transition-colors">Templates</a>
+          <a href={`${base}/docs/api`} class="text-cyan-400">API Reference</a>
+          <a href={`${base}/docs/deployment`} class="text-slate-400 hover:text-white transition-colors">Deployment</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-2">API Reference</h1>
+      <p class="text-lg text-slate-400 mb-4">Complete REST API documentation for Folium PDF generation.</p>
+      <p class="text-sm text-slate-500 mb-10">
+        Base URL: <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300">https://api.folium.cc</code> (production) · <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300">http://localhost:8080</code> (local)
+        <span class="mx-2">|</span>
+        <a href={`${base}/docs`} class="text-cyan-400 hover:underline">Interactive OpenAPI docs →</a>
+      </p>
+
+      <!-- TOC -->
+      <nav class="mb-12 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">On this page</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#authentication" class="text-cyan-400 hover:underline">Authentication</a></li>
+          <li><a href="#endpoints" class="text-cyan-400 hover:underline">Endpoints</a></li>
+          <li><a href="#rate-limits" class="text-cyan-400 hover:underline">Rate Limits</a></li>
+          <li><a href="#error-codes" class="text-cyan-400 hover:underline">Error Codes</a></li>
+        </ul>
+      </nav>
+
+      <!-- Authentication -->
+      <section id="authentication" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Authentication</h2>
+        <p class="text-slate-300 mb-4">All protected endpoints require an API key. Pass it via either header:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-4">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`Authorization: Bearer fp_your_api_key_here
+# or
+X-API-Key: fp_your_api_key_here`}</code></pre>
+        </div>
+        <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm text-slate-300">
+          <strong class="text-amber-400">⚠️ Dev mode:</strong> When no <code class="text-cyan-300">FOLIUM_API_KEYS</code> environment variable is set, authentication is bypassed entirely. Never run without keys in production.
+        </div>
+      </section>
+
+      <!-- Endpoints -->
+      <section id="endpoints" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Endpoints</h2>
+
+        <!-- POST /v1/generate -->
+        <div class="mb-10 p-6 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-bold rounded uppercase">POST</span>
+            <code class="text-lg text-white font-mono">/v1/generate</code>
+          </div>
+          <p class="text-slate-300 mb-4">Generate a PDF from a template and data. Returns raw PDF bytes.</p>
+
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Request Body</h4>
+          <div class="bg-slate-800/50 rounded p-4 overflow-x-auto mb-4">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "template": {
+    "name": "invoice",
+    "template": {
+      "type": "container",
+      "children": [
+        { "type": "text", "content": "Invoice #{{id}}", "style": { "fontSize": 24 } }
+      ]
+    },
+    "metadata": {
+      "pageSize": "A4",
+      "margins": { "top": 40, "right": 40, "bottom": 40, "left": 40 }
+    },
+    "styles": {
+      "heading": { "fontSize": 24, "fontWeight": "bold" }
+    }
+  },
+  "data": {
+    "id": "INV-001"
+  },
+  "options": {
+    "filename": "invoice.pdf"
+  }
+}`}</code></pre>
+          </div>
+
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Success Response</h4>
+          <p class="text-slate-300 text-sm mb-2"><code class="text-emerald-400">200 OK</code> — Raw PDF bytes with these headers:</p>
+          <div class="bg-slate-800/50 rounded overflow-hidden mb-4">
+            <table class="w-full text-sm">
+              <tbody class="divide-y divide-slate-700">
+                <tr><td class="px-3 py-1.5 text-cyan-300 font-mono">Content-Type</td><td class="px-3 py-1.5">application/pdf</td></tr>
+                <tr><td class="px-3 py-1.5 text-cyan-300 font-mono">Content-Disposition</td><td class="px-3 py-1.5">attachment; filename="invoice.pdf"</td></tr>
+                <tr><td class="px-3 py-1.5 text-cyan-300 font-mono">X-Folium-Render-Time-Ms</td><td class="px-3 py-1.5">Rendering duration (e.g., 12)</td></tr>
+                <tr><td class="px-3 py-1.5 text-cyan-300 font-mono">X-Folium-Size-Bytes</td><td class="px-3 py-1.5">PDF file size</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">cURL Example</h4>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`curl -X POST https://api.folium.cc/v1/generate \\
+  -H "Authorization: Bearer fp_your_key" \\
+  -H "Content-Type: application/json" \\
+  -d '{"template":{"name":"hello","template":{"type":"text","content":"Hello World!"}},"data":{}}' \\
+  --output hello.pdf`}</code></pre>
+          </div>
+        </div>
+
+        <!-- GET /health -->
+        <div class="mb-10 p-6 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-bold rounded uppercase">GET</span>
+            <code class="text-lg text-white font-mono">/health</code>
+            <span class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">Public</span>
+          </div>
+          <p class="text-slate-300 mb-4">Health check endpoint. No authentication required.</p>
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Response</h4>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "status": "healthy",
+  "version": "1.0.0"
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- GET /metrics -->
+        <div class="mb-10 p-6 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-bold rounded uppercase">GET</span>
+            <code class="text-lg text-white font-mono">/metrics</code>
+            <span class="text-xs text-slate-500 bg-slate-800 px-2 py-0.5 rounded">Public</span>
+          </div>
+          <p class="text-slate-300 mb-4">Prometheus-compatible metrics endpoint for monitoring.</p>
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Response</h4>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`# HELP folium_requests_total Total PDF generation requests
+# TYPE folium_requests_total counter
+folium_requests_total{status="success"} 1542
+folium_requests_total{status="error"} 23
+
+# HELP folium_render_duration_seconds PDF render duration
+# TYPE folium_render_duration_seconds histogram
+folium_render_duration_seconds_bucket{le="0.01"} 1200
+folium_render_duration_seconds_bucket{le="0.05"} 1500
+folium_render_duration_seconds_bucket{le="0.1"} 1540`}</code></pre>
+          </div>
+        </div>
+
+        <!-- GET /v1/usage -->
+        <div class="p-6 bg-slate-900 border border-slate-800 rounded-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-bold rounded uppercase">GET</span>
+            <code class="text-lg text-white font-mono">/v1/usage</code>
+          </div>
+          <p class="text-slate-300 mb-4">Returns API usage statistics for the authenticated key.</p>
+          <h4 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">Response</h4>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "total_requests": 1542,
+  "successful_renders": 1519,
+  "failed_renders": 23,
+  "total_bytes_generated": 48293847,
+  "avg_render_time_ms": 14.2,
+  "period": {
+    "start": "2026-02-01T00:00:00Z",
+    "end": "2026-02-28T23:59:59Z"
+  }
+}`}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rate Limits -->
+      <section id="rate-limits" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Rate Limits</h2>
+        <p class="text-slate-300 mb-4">Rate limits are enforced per API key using a 60-second sliding window.</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden mb-6">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Tier</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Requests / min</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Concurrent renders</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="px-4 py-2 text-white">Free</td><td class="px-4 py-2">10</td><td class="px-4 py-2">2</td></tr>
+              <tr><td class="px-4 py-2 text-white">Starter</td><td class="px-4 py-2">60</td><td class="px-4 py-2">5</td></tr>
+              <tr><td class="px-4 py-2 text-white">Pro</td><td class="px-4 py-2">300</td><td class="px-4 py-2">20</td></tr>
+              <tr><td class="px-4 py-2 text-white">Enterprise</td><td class="px-4 py-2">1,000</td><td class="px-4 py-2">50</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-slate-300 mb-2">Rate limit headers are included in every response:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 58`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Error Codes -->
+      <section id="error-codes" class="mb-12">
+        <h2 class="text-3xl font-bold text-white mb-6">Error Codes</h2>
+        <p class="text-slate-300 mb-4">All errors return JSON with a <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">code</code> and <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">message</code> field:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "error": {
+    "code": "INVALID_TEMPLATE",
+    "message": "Missing required field: template.template.type"
+  }
+}`}</code></pre>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Code</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">HTTP</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">UNAUTHORIZED</td><td class="px-4 py-2">401</td><td class="px-4 py-2">Invalid or missing API key</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">INVALID_TEMPLATE</td><td class="px-4 py-2">400</td><td class="px-4 py-2">Template JSON is malformed or missing required fields</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">PAYLOAD_TOO_LARGE</td><td class="px-4 py-2">413</td><td class="px-4 py-2">Request body exceeds maximum size (default 10MB)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">RENDER_FAILED</td><td class="px-4 py-2">422</td><td class="px-4 py-2">PDF rendering failed (e.g., invalid layout)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">RATE_LIMITED</td><td class="px-4 py-2">429</td><td class="px-4 py-2">Rate limit exceeded</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">TOO_MANY_REQUESTS</td><td class="px-4 py-2">429</td><td class="px-4 py-2">Concurrent render limit exceeded</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">RENDER_PANICKED</td><td class="px-4 py-2">500</td><td class="px-4 py-2">Unexpected engine error</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">INTERNAL_ERROR</td><td class="px-4 py-2">500</td><td class="px-4 py-2">Internal server error</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">RENDER_TIMEOUT</td><td class="px-4 py-2">504</td><td class="px-4 py-2">Rendering timed out</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 text-center text-sm text-slate-500">
+      © 2026 Folium. Built with Rust. Fast by default.
+    </footer>
+  </div>
+</Layout>

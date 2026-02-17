@@ -1,0 +1,323 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL ?? '/folium-site';
+---
+<Layout title="Template Authoring Guide — Folium">
+  <div class="min-h-screen bg-slate-950 text-slate-200">
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href={`${base}/`} class="text-xl font-bold text-white">
+          <span class="text-cyan-400">◈</span> Folium
+        </a>
+        <nav class="flex gap-6 text-sm">
+          <a href={`${base}/`} class="text-slate-400 hover:text-white transition-colors">Home</a>
+          <a href={`${base}/docs/getting-started`} class="text-slate-400 hover:text-white transition-colors">Getting Started</a>
+          <a href={`${base}/docs/template-guide`} class="text-cyan-400">Templates</a>
+          <a href={`${base}/docs`} class="text-slate-400 hover:text-white transition-colors">API Reference</a>
+          <a href={`${base}/docs/deployment`} class="text-slate-400 hover:text-white transition-colors">Deployment</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-2">Template Authoring Guide</h1>
+      <p class="text-lg text-slate-400 mb-10">Everything you need to design beautiful PDF templates with Folium's JSON schema.</p>
+
+      <!-- TOC -->
+      <nav class="mb-12 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">On this page</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#schema-overview" class="text-cyan-400 hover:underline">JSON Schema Overview</a></li>
+          <li><a href="#element-types" class="text-cyan-400 hover:underline">Element Types</a></li>
+          <li><a href="#styling" class="text-cyan-400 hover:underline">Styling System</a></li>
+          <li><a href="#variables" class="text-cyan-400 hover:underline">Variables & Data Binding</a></li>
+          <li><a href="#tips" class="text-cyan-400 hover:underline">Tips & Best Practices</a></li>
+        </ul>
+      </nav>
+
+      <!-- Schema Overview -->
+      <section id="schema-overview" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">JSON Schema Overview</h2>
+        <p class="text-slate-300 mb-4">
+          Folium templates are JSON documents that describe a tree of elements. Every element has a <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">type</code> and optional <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">style</code>, <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">children</code>, and type-specific properties.
+        </p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <p class="text-sm text-slate-500 mb-2">Minimal template</p>
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "container",
+  "style": { "padding": 40 },
+  "children": [
+    {
+      "type": "text",
+      "content": "Hello {{name}}!",
+      "style": { "fontSize": 24, "fontWeight": "bold" }
+    }
+  ]
+}`}</code></pre>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Property</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Type</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">type</td><td class="px-4 py-2">string</td><td class="px-4 py-2">Element type (required)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">style</td><td class="px-4 py-2">object</td><td class="px-4 py-2">CSS-like style properties</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">styleRef</td><td class="px-4 py-2">string</td><td class="px-4 py-2">Reference to a named style in the styles object</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">children</td><td class="px-4 py-2">array</td><td class="px-4 py-2">Child elements (for container types)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">content</td><td class="px-4 py-2">string</td><td class="px-4 py-2">Text content with optional Handlebars variables</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">condition</td><td class="px-4 py-2">string</td><td class="px-4 py-2">Conditional rendering expression</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Element Types -->
+      <section id="element-types" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Element Types</h2>
+
+        <!-- Container -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">container</code></h3>
+          <p class="text-slate-300 text-sm mb-3">A layout wrapper that holds child elements. Supports flex-like layout with direction, gap, alignment.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "container",
+  "style": { "flexDirection": "row", "gap": 16, "padding": 20 },
+  "children": [ ... ]
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">text</code></h3>
+          <p class="text-slate-300 text-sm mb-3">Renders text content. Supports Handlebars variable interpolation, font sizing, weight, color, alignment.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "text",
+  "content": "Invoice #{{id}} — Due: {{due_date}}",
+  "style": { "fontSize": 16, "fontWeight": "bold", "color": "#0f172a" }
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">table</code></h3>
+          <p class="text-slate-300 text-sm mb-3">Renders tabular data. Define columns with headers, field mappings, and widths. Bind to an array in your data via <code class="text-cyan-300">dataKey</code>.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "table",
+  "dataKey": "line_items",
+  "columns": [
+    { "header": "Description", "field": "desc", "width": "50%" },
+    { "header": "Quantity", "field": "qty", "width": "20%" },
+    { "header": "Amount", "field": "amount", "width": "30%" }
+  ],
+  "style": { "marginTop": 16 },
+  "headerStyle": { "backgroundColor": "#0f172a", "color": "#fff", "fontWeight": "bold" },
+  "rowStyle": { "borderBottom": "1px solid #e2e8f0" }
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">image</code></h3>
+          <p class="text-slate-300 text-sm mb-3">Embeds an image from a URL or base64 data URI. Supports PNG, JPEG, and SVG.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "image",
+  "src": "https://example.com/logo.png",
+  "style": { "width": 120, "height": 40, "objectFit": "contain" }
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">divider</code></h3>
+          <p class="text-slate-300 text-sm mb-3">A horizontal rule to visually separate sections.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "type": "divider",
+  "style": { "marginTop": 16, "marginBottom": 16, "color": "#e2e8f0", "thickness": 1 }
+}`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Spacer -->
+        <div class="mb-8 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">spacer</code></h3>
+          <p class="text-slate-300 text-sm mb-3">An empty block for adding vertical space between elements.</p>
+          <div class="bg-slate-800/50 rounded p-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{ "type": "spacer", "style": { "height": 32 } }`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Page Break -->
+        <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+          <h3 class="text-xl font-semibold text-white mb-2"><code class="text-cyan-400">pageBreak</code></h3>
+          <p class="text-slate-300 text-sm">Forces a page break at this point in the document. No style needed.</p>
+          <div class="bg-slate-800/50 rounded p-3 mt-3 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{ "type": "pageBreak" }`}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Styling -->
+      <section id="styling" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Styling System</h2>
+        <p class="text-slate-300 mb-6">
+          Folium's styling is CSS-inspired. Apply styles inline on each element, or define named styles in the top-level <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">styles</code> object and reference them via <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">styleRef</code>.
+        </p>
+
+        <h3 class="text-xl font-semibold text-white mb-4">Common Style Properties</h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden mb-8">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Property</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Type</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Example</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">fontSize</td><td class="px-4 py-2">number</td><td class="px-4 py-2 text-slate-400">24</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">fontWeight</td><td class="px-4 py-2">string</td><td class="px-4 py-2 text-slate-400">"bold" | "normal"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">color</td><td class="px-4 py-2">string</td><td class="px-4 py-2 text-slate-400">"#1e293b"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">backgroundColor</td><td class="px-4 py-2">string</td><td class="px-4 py-2 text-slate-400">"#f8fafc"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">padding</td><td class="px-4 py-2">number | object</td><td class="px-4 py-2 text-slate-400">40 or {"{ top, right, bottom, left }"}</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">margin / marginTop / etc.</td><td class="px-4 py-2">number</td><td class="px-4 py-2 text-slate-400">16</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">textAlign</td><td class="px-4 py-2">string</td><td class="px-4 py-2 text-slate-400">"left" | "center" | "right"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">lineHeight</td><td class="px-4 py-2">number</td><td class="px-4 py-2 text-slate-400">1.5</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">flexDirection</td><td class="px-4 py-2">string</td><td class="px-4 py-2 text-slate-400">"row" | "column"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">gap</td><td class="px-4 py-2">number</td><td class="px-4 py-2 text-slate-400">12</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">width / height</td><td class="px-4 py-2">number | string</td><td class="px-4 py-2 text-slate-400">200 or "50%"</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono">borderRadius</td><td class="px-4 py-2">number</td><td class="px-4 py-2 text-slate-400">8</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-xl font-semibold text-white mb-4">Named Styles (styleRef)</h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`// In the request payload:
+"styles": {
+  "heading": { "fontSize": 28, "fontWeight": "bold", "color": "#0f172a" },
+  "caption": { "fontSize": 10, "color": "#94a3b8", "textAlign": "center" }
+}
+
+// In the template:
+{ "type": "text", "content": "Title", "styleRef": "heading" }
+{ "type": "text", "content": "Page 1 of 3", "styleRef": "caption" }
+
+// Inline style merges on top of styleRef:
+{ "type": "text", "content": "Red Title", "styleRef": "heading", "style": { "color": "red" } }`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Variables -->
+      <section id="variables" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Variables & Data Binding</h2>
+        <p class="text-slate-300 mb-6">
+          Use <a href="https://handlebarsjs.com/" class="text-cyan-400 hover:underline">Handlebars</a> syntax to inject dynamic data into templates.
+        </p>
+
+        <div class="space-y-6">
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-lg font-semibold text-white mb-2">Simple Variables</h3>
+            <pre class="text-sm text-slate-200 bg-slate-800/50 rounded p-3 overflow-x-auto"><code>{`"content": "Hello {{name}}, your order #{{order_id}} is ready."`}</code></pre>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-lg font-semibold text-white mb-2">Nested Properties</h3>
+            <pre class="text-sm text-slate-200 bg-slate-800/50 rounded p-3 overflow-x-auto"><code>{`"content": "{{company.name}} — {{company.address.city}}, {{company.address.state}}"`}</code></pre>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-lg font-semibold text-white mb-2">Array Data (Tables)</h3>
+            <p class="text-slate-300 text-sm mb-3">Tables bind to arrays via the <code class="text-cyan-300">dataKey</code> property. Each column's <code class="text-cyan-300">field</code> maps to a key in the array items.</p>
+            <pre class="text-sm text-slate-200 bg-slate-800/50 rounded p-3 overflow-x-auto"><code>{`// Data:
+"items": [
+  { "name": "Widget A", "price": "$10.00" },
+  { "name": "Widget B", "price": "$25.00" }
+]
+
+// Template:
+{
+  "type": "table",
+  "dataKey": "items",
+  "columns": [
+    { "header": "Product", "field": "name" },
+    { "header": "Price", "field": "price" }
+  ]
+}`}</code></pre>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-lg font-semibold text-white mb-2">Conditional Rendering</h3>
+            <p class="text-slate-300 text-sm mb-3">Use the <code class="text-cyan-300">condition</code> property to show or hide elements based on data.</p>
+            <pre class="text-sm text-slate-200 bg-slate-800/50 rounded p-3 overflow-x-auto"><code>{`{
+  "type": "text",
+  "content": "PAID ✓",
+  "condition": "{{is_paid}}",
+  "style": { "color": "#16a34a", "fontWeight": "bold" }
+}`}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tips -->
+      <section id="tips" class="mb-12">
+        <h2 class="text-3xl font-bold text-white mb-6">Tips & Best Practices</h2>
+        <div class="space-y-4">
+          <div class="flex gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+            <span class="text-cyan-400 text-lg">💡</span>
+            <div>
+              <h4 class="text-white font-semibold mb-1">Use named styles for consistency</h4>
+              <p class="text-sm text-slate-400">Define your typography and color palette in the <code class="text-cyan-300">styles</code> object. Change once, apply everywhere.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+            <span class="text-cyan-400 text-lg">💡</span>
+            <div>
+              <h4 class="text-white font-semibold mb-1">Keep templates shallow</h4>
+              <p class="text-sm text-slate-400">Deeply nested containers slow rendering. Aim for 3–4 levels of nesting max.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+            <span class="text-cyan-400 text-lg">💡</span>
+            <div>
+              <h4 class="text-white font-semibold mb-1">Test with small data first</h4>
+              <p class="text-sm text-slate-400">Get the layout right with a few rows, then scale up. Folium handles thousands of rows, but iteration is faster with less data.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+            <span class="text-cyan-400 text-lg">💡</span>
+            <div>
+              <h4 class="text-white font-semibold mb-1">Use base64 for logos</h4>
+              <p class="text-sm text-slate-400">Embedding images as data URIs avoids network requests during rendering, giving you the fastest possible output.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 p-4 bg-slate-900 border border-slate-800 rounded-lg">
+            <span class="text-cyan-400 text-lg">💡</span>
+            <div>
+              <h4 class="text-white font-semibold mb-1">Set page metadata</h4>
+              <p class="text-sm text-slate-400">Always specify <code class="text-cyan-300">pageSize</code> and <code class="text-cyan-300">margins</code> in metadata. Defaults are A4 with 40pt margins, but being explicit avoids surprises.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 text-center text-sm text-slate-500">
+      © 2026 Folium. Built with Rust. Fast by default.
+    </footer>
+  </div>
+</Layout>

@@ -1,0 +1,303 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL ?? '/folium-site';
+---
+<Layout title="Getting Started — Folium">
+  <div class="min-h-screen bg-slate-950 text-slate-200">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href={`${base}/`} class="text-xl font-bold text-white">
+          <span class="text-cyan-400">◈</span> Folium
+        </a>
+        <nav class="flex gap-6 text-sm">
+          <a href={`${base}/`} class="text-slate-400 hover:text-white transition-colors">Home</a>
+          <a href={`${base}/docs/getting-started`} class="text-cyan-400">Getting Started</a>
+          <a href={`${base}/docs/template-guide`} class="text-slate-400 hover:text-white transition-colors">Templates</a>
+          <a href={`${base}/docs`} class="text-slate-400 hover:text-white transition-colors">API Reference</a>
+          <a href={`${base}/docs/deployment`} class="text-slate-400 hover:text-white transition-colors">Deployment</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-2">Getting Started</h1>
+      <p class="text-lg text-slate-400 mb-10">Install Folium and generate your first PDF in under 5 minutes.</p>
+
+      <!-- Table of Contents -->
+      <nav class="mb-12 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">On this page</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#installation" class="text-cyan-400 hover:underline">Installation</a></li>
+          <li><a href="#first-pdf" class="text-cyan-400 hover:underline">Your First PDF</a></li>
+          <li><a href="#template-structure" class="text-cyan-400 hover:underline">Template Structure</a></li>
+          <li><a href="#next-steps" class="text-cyan-400 hover:underline">Next Steps</a></li>
+        </ul>
+      </nav>
+
+      <!-- Installation -->
+      <section id="installation" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base font-bold">1</span>
+          Installation
+        </h2>
+
+        <p class="text-slate-300 mb-6">Choose the installation method that best fits your workflow.</p>
+
+        <!-- Docker -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+            <span class="text-cyan-400">🐳</span> Docker (Recommended)
+          </h3>
+          <p class="text-slate-300 mb-3">The fastest way to get Folium running. No build tools required.</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`# Pull the latest image
+docker pull ghcr.io/gpradofe/folium:latest
+
+# Run the server on port 8080
+docker run -d \\
+  --name folium \\
+  -p 8080:8080 \\
+  -e FOLIUM_API_KEYS="fp_your_key_here" \\
+  ghcr.io/gpradofe/folium:latest
+
+# Verify it's running
+curl http://localhost:8080/health`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Cargo -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+            <span class="text-cyan-400">🦀</span> Cargo Install (Rust)
+          </h3>
+          <p class="text-slate-300 mb-3">Build from source with the Rust toolchain. Requires Rust 1.75+.</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`# Install from crates.io
+cargo install folium-pdf
+
+# Or clone and build from source
+git clone https://github.com/gpradofe/folium.git
+cd folium
+cargo build --release
+
+# Run the server
+./target/release/folium serve --port 8080`}</code></pre>
+          </div>
+        </div>
+
+        <!-- npm / WASM -->
+        <div class="mb-8">
+          <h3 class="text-xl font-semibold text-white mb-3 flex items-center gap-2">
+            <span class="text-cyan-400">📦</span> npm / WASM
+          </h3>
+          <p class="text-slate-300 mb-3">Use Folium directly in Node.js or the browser via WebAssembly. Great for serverless or edge environments.</p>
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`npm install @folium/wasm
+
+# Usage in Node.js
+import { render } from '@folium/wasm';
+
+const pdfBytes = await render({
+  template: { type: "text", content: "Hello World!", style: { fontSize: 24 } },
+  data: {},
+});`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Cloud API -->
+        <div class="p-5 bg-gradient-to-r from-cyan-500/10 to-emerald-500/10 border border-cyan-500/20 rounded-lg">
+          <h3 class="text-lg font-semibold text-white mb-2">☁️ Cloud API — Zero Setup</h3>
+          <p class="text-slate-300 text-sm">
+            Don't want to self-host? Use the managed API at <a href="https://api.folium.cc" class="text-cyan-400 hover:underline">api.folium.cc</a>.
+            Sign up at <a href="https://folium.cc" class="text-cyan-400 hover:underline">folium.cc</a> to get an API key prefixed with <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-xs">fp_</code>.
+            See the <a href={`${base}/docs/quickstart`} class="text-cyan-400 hover:underline">Quickstart guide</a> for a walkthrough.
+          </p>
+        </div>
+      </section>
+
+      <!-- First PDF -->
+      <section id="first-pdf" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base font-bold">2</span>
+          Your First PDF
+        </h2>
+
+        <p class="text-slate-300 mb-6">
+          Let's generate a simple invoice PDF. Create a file called <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 text-sm">invoice.json</code>:
+        </p>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <p class="text-sm text-slate-500 mb-2">invoice.json</p>
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "template": {
+    "name": "simple-invoice",
+    "template": {
+      "type": "container",
+      "style": { "padding": 40 },
+      "children": [
+        {
+          "type": "text",
+          "content": "INVOICE",
+          "style": { "fontSize": 32, "fontWeight": "bold", "color": "#1e293b" }
+        },
+        {
+          "type": "text",
+          "content": "Invoice #{{invoice_number}}",
+          "style": { "fontSize": 16, "color": "#64748b", "marginTop": 8 }
+        },
+        {
+          "type": "text",
+          "content": "Bill to: {{client_name}}",
+          "style": { "fontSize": 14, "marginTop": 24 }
+        },
+        {
+          "type": "table",
+          "style": { "marginTop": 20 },
+          "columns": [
+            { "header": "Item", "field": "item", "width": "60%" },
+            { "header": "Qty", "field": "qty", "width": "15%" },
+            { "header": "Price", "field": "price", "width": "25%" }
+          ],
+          "dataKey": "line_items"
+        },
+        {
+          "type": "text",
+          "content": "Total: ${{total}}",
+          "style": { "fontSize": 20, "fontWeight": "bold", "marginTop": 16, "textAlign": "right" }
+        }
+      ]
+    }
+  },
+  "data": {
+    "invoice_number": "INV-2026-001",
+    "client_name": "Acme Corp",
+    "total": "1,250.00",
+    "line_items": [
+      { "item": "Web Development", "qty": "40 hrs", "price": "$800.00" },
+      { "item": "Design Review", "qty": "10 hrs", "price": "$250.00" },
+      { "item": "Deployment Setup", "qty": "1", "price": "$200.00" }
+    ]
+  },
+  "options": { "filename": "invoice.pdf" }
+}`}</code></pre>
+        </div>
+
+        <p class="text-slate-300 mb-4">Now send it to the Folium server:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`curl -X POST http://localhost:8080/v1/generate \\
+  -H "Content-Type: application/json" \\
+  -d @invoice.json \\
+  --output invoice.pdf
+
+# You should see a 31KB PDF in ~15ms 🎉`}</code></pre>
+        </div>
+
+        <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-slate-300">
+          <strong class="text-emerald-400">💡 Tip:</strong> Check the response headers for timing info.
+          <code class="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300">X-Folium-Render-Time-Ms</code> shows exactly how long rendering took.
+        </div>
+      </section>
+
+      <!-- Template Structure -->
+      <section id="template-structure" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-base font-bold">3</span>
+          Template Structure
+        </h2>
+
+        <p class="text-slate-300 mb-6">
+          A Folium request consists of four key parts. You can inline them in a single JSON payload, or split them into separate files for reuse.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-white font-semibold mb-2 flex items-center gap-2">
+              <span class="text-cyan-400 font-mono text-sm">template.json</span>
+            </h3>
+            <p class="text-sm text-slate-400">
+              The layout tree. Defines the document structure using nested elements — containers, text, tables, images, and more. This is the "blueprint" of your PDF.
+            </p>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-white font-semibold mb-2 flex items-center gap-2">
+              <span class="text-cyan-400 font-mono text-sm">metadata.json</span>
+            </h3>
+            <p class="text-sm text-slate-400">
+              PDF metadata — title, author, subject, keywords, page size (<code class="text-cyan-300">A4</code>, <code class="text-cyan-300">Letter</code>), orientation, and margins.
+            </p>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-white font-semibold mb-2 flex items-center gap-2">
+              <span class="text-cyan-400 font-mono text-sm">styles.json</span>
+            </h3>
+            <p class="text-sm text-slate-400">
+              Reusable style definitions. Define named styles (like CSS classes) and reference them across elements to keep templates DRY.
+            </p>
+          </div>
+
+          <div class="p-5 bg-slate-900 border border-slate-800 rounded-lg">
+            <h3 class="text-white font-semibold mb-2 flex items-center gap-2">
+              <span class="text-cyan-400 font-mono text-sm">data.json</span>
+            </h3>
+            <p class="text-sm text-slate-400">
+              The dynamic data to inject. Variables referenced via <code class="text-cyan-300">{"{{variable}}"}</code> Handlebars syntax are replaced at render time.
+            </p>
+          </div>
+        </div>
+
+        <p class="text-slate-300 mb-4">Here's how they fit together in a single API request:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "template": {
+    "name": "my-template",        // Template identifier
+    "template": { ... },          // ← template.json (layout tree)
+    "metadata": {                 // ← metadata.json
+      "title": "My Document",
+      "pageSize": "A4",
+      "margins": { "top": 40, "right": 40, "bottom": 40, "left": 40 }
+    },
+    "styles": {                   // ← styles.json
+      "heading": { "fontSize": 24, "fontWeight": "bold" },
+      "body": { "fontSize": 12, "lineHeight": 1.5 }
+    }
+  },
+  "data": { ... },               // ← data.json
+  "options": {
+    "filename": "output.pdf"
+  }
+}`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Next Steps -->
+      <section id="next-steps" class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-4">Next Steps</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href={`${base}/docs/template-guide`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">🎨 Template Authoring Guide</h3>
+            <p class="text-sm text-slate-400">Deep dive into element types, styling, variables, and best practices.</p>
+          </a>
+          <a href={`${base}/docs`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">📖 API Reference</h3>
+            <p class="text-sm text-slate-400">Full endpoint documentation with schemas and examples.</p>
+          </a>
+          <a href={`${base}/docs/deployment`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">🚀 Deployment Guide</h3>
+            <p class="text-sm text-slate-400">Deploy Folium to Docker, AWS ECS/Fargate, and more.</p>
+          </a>
+          <a href={`${base}/docs/quickstart`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">⚡ Quickstart</h3>
+            <p class="text-sm text-slate-400">Cloud API quickstart with code examples in Node.js and Python.</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 text-center text-sm text-slate-500">
+      © 2026 Folium. Built with Rust. Fast by default.
+    </footer>
+  </div>
+</Layout>
