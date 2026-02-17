@@ -1,0 +1,298 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const templates = [
+  {
+    name: "Invoice",
+    slug: "invoice",
+    description: "Professional invoice with line items, tax calculations, and payment terms. Perfect for freelancers and businesses.",
+    icon: "💰",
+    color: "emerald",
+    json: `{
+  "company-name": { "content": "Acme Corporation" },
+  "invoice-title": { "content": "Invoice #INV-2026-0042" },
+  "line-items": {
+    "rows": [
+      { "description": "Web Development", "quantity": 40, "unit_price": 150.00, "total": 6000.00 },
+      { "description": "UI/UX Design", "quantity": 20, "unit_price": 125.00, "total": 2500.00 }
+    ]
+  },
+  "grand-total": { "content": "Total Due: $9,698.40" }
+}`
+  },
+  {
+    name: "Resume",
+    slug: "resume",
+    description: "Clean, ATS-friendly resume layout with sections for experience, education, and skills.",
+    icon: "📄",
+    color: "blue",
+    json: `{
+  "name": { "content": "Jordan Rivera" },
+  "contact": { "content": "jordan.rivera@email.com | Denver, CO" },
+  "experience": {
+    "rows": [
+      { "role": "Senior Software Engineer", "company": "CloudScale Inc.", "period": "2023–Present" }
+    ]
+  },
+  "skills": { "content": "TypeScript, Rust, Python, Go | React, Node.js" }
+}`
+  },
+  {
+    name: "Contract",
+    slug: "contract",
+    description: "Multi-section legal contract with signature blocks, numbered clauses, and page numbering.",
+    icon: "📝",
+    color: "purple",
+    json: `{
+  "title": { "content": "Service Agreement" },
+  "contract-number": { "content": "Contract No. SA-2026-0188" },
+  "section-1-heading": { "content": "1. Scope of Services" },
+  "section-1": { "content": "Party A agrees to provide software development..." },
+  "sig-block-1": { "content": "Signature: ________________________" }
+}`
+  },
+  {
+    name: "Proposal",
+    slug: "proposal",
+    description: "Project proposal with timeline table, budget breakdown, and terms. Ideal for client pitches.",
+    icon: "🎯",
+    color: "amber",
+    json: `{
+  "title": { "content": "Project Proposal" },
+  "subtitle": { "content": "E-Commerce Platform Modernization" },
+  "timeline": {
+    "rows": [
+      { "phase": "Phase 1: Discovery", "duration": "3 weeks", "cost": "$18,000" },
+      { "phase": "Phase 2: Backend", "duration": "8 weeks", "cost": "$72,000" }
+    ]
+  },
+  "total-cost": { "content": "Total: $190,000" }
+}`
+  },
+  {
+    name: "Report",
+    slug: "report",
+    description: "Quarterly performance report with data tables, executive summary, and findings sections.",
+    icon: "📊",
+    color: "cyan",
+    json: `{
+  "report-title": { "content": "Q4 2025 Performance Report" },
+  "data-table": {
+    "rows": [
+      { "metric": "Revenue ($M)", "q1": "12.4", "q2": "13.1", "q3": "14.8", "q4": "16.2" },
+      { "metric": "New Customers", "q1": "342", "q2": "401", "q3": "389", "q4": "456" }
+    ]
+  },
+  "conclusion": { "content": "Well-positioned for continued growth..." }
+}`
+  },
+  {
+    name: "Receipt",
+    slug: "receipt",
+    description: "Point-of-sale receipt with itemized list, tax calculation, and payment method details.",
+    icon: "🧾",
+    color: "rose",
+    json: `{
+  "store-name": { "content": "Green Leaf Market" },
+  "items": {
+    "rows": [
+      { "item": "Organic Bananas", "qty": 1, "price": 2.49 },
+      { "item": "Sourdough Bread", "qty": 1, "price": 5.99 }
+    ]
+  },
+  "total": { "content": "Total: $38.67" }
+}`
+  },
+  {
+    name: "Letter",
+    slug: "letter",
+    description: "Formal business letter with sender/recipient info, paragraphs, and signature block.",
+    icon: "✉️",
+    color: "indigo",
+    json: `{
+  "sender-info": { "content": "Sarah Mitchell\\n789 Pine Street\\nAustin, TX 78701" },
+  "recipient-info": { "content": "Mr. David Park\\nInnovate Solutions Inc." },
+  "salutation": { "content": "Dear Mr. Park," },
+  "closing": { "content": "Sincerely," },
+  "signature": { "content": "Sarah Mitchell" }
+}`
+  },
+  {
+    name: "Cover Letter",
+    slug: "cover-letter",
+    description: "Tailored cover letter template with professional formatting and structured paragraphs.",
+    icon: "💼",
+    color: "teal",
+    json: `{
+  "applicant-name": { "content": "Morgan Blake" },
+  "contact-info": { "content": "morgan.blake@email.com | Portland, OR" },
+  "opening": { "content": "I am excited to apply for the Data Engineer position..." },
+  "sign-off": { "content": "Best regards," }
+}`
+  },
+  {
+    name: "Certificate",
+    slug: "certificate",
+    description: "Award or completion certificate with organization name, recipient, and signatory details.",
+    icon: "🏆",
+    color: "yellow",
+    json: `{
+  "org-name": { "content": "Rocky Mountain Tech Academy" },
+  "certificate-title": { "content": "Certificate of Completion" },
+  "recipient-name": { "content": "Alexandra Chen" },
+  "date": { "content": "Awarded on February 9, 2026" },
+  "signatory": { "content": "Dr. Michael Torres, Program Director" }
+}`
+  },
+  {
+    name: "Meeting Notes",
+    slug: "meeting-notes",
+    description: "Structured meeting notes with attendees, agenda, discussion points, and action items table.",
+    icon: "🗓️",
+    color: "orange",
+    json: `{
+  "title": { "content": "Sprint Planning Meeting — Sprint 24" },
+  "attendees": { "content": "Lisa Park, Marco, Priya, James, Yuki" },
+  "action-items": {
+    "rows": [
+      { "action": "Complete auth refactor", "owner": "Marco", "due_date": "2026-02-11" }
+    ]
+  }
+}`
+  },
+  {
+    name: "Timesheet",
+    slug: "timesheet",
+    description: "Weekly timesheet with time entries table, project tracking, and approval signature lines.",
+    icon: "⏱️",
+    color: "lime",
+    json: `{
+  "title": { "content": "Weekly Timesheet" },
+  "employee-info": { "content": "Employee: Casey Johnson | ID: EMP-4421" },
+  "time-entries": {
+    "rows": [
+      { "date": "Mon 02/03", "project": "Project Alpha", "task": "Backend API", "hours": 6.0 },
+      { "date": "Tue 02/04", "project": "Project Alpha", "task": "DB migration", "hours": 7.5 }
+    ]
+  },
+  "total-hours": { "content": "Total Hours: 37.0" }
+}`
+  }
+];
+
+const colorMap: Record<string, { bg: string; border: string; text: string; iconBg: string; badge: string }> = {
+  emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/20", text: "text-emerald-400", iconBg: "bg-emerald-500/15", badge: "bg-emerald-500/20 text-emerald-300" },
+  blue: { bg: "bg-blue-500/10", border: "border-blue-500/20", text: "text-blue-400", iconBg: "bg-blue-500/15", badge: "bg-blue-500/20 text-blue-300" },
+  purple: { bg: "bg-purple-500/10", border: "border-purple-500/20", text: "text-purple-400", iconBg: "bg-purple-500/15", badge: "bg-purple-500/20 text-purple-300" },
+  amber: { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-400", iconBg: "bg-amber-500/15", badge: "bg-amber-500/20 text-amber-300" },
+  cyan: { bg: "bg-cyan-500/10", border: "border-cyan-500/20", text: "text-cyan-400", iconBg: "bg-cyan-500/15", badge: "bg-cyan-500/20 text-cyan-300" },
+  rose: { bg: "bg-rose-500/10", border: "border-rose-500/20", text: "text-rose-400", iconBg: "bg-rose-500/15", badge: "bg-rose-500/20 text-rose-300" },
+  indigo: { bg: "bg-indigo-500/10", border: "border-indigo-500/20", text: "text-indigo-400", iconBg: "bg-indigo-500/15", badge: "bg-indigo-500/20 text-indigo-300" },
+  teal: { bg: "bg-teal-500/10", border: "border-teal-500/20", text: "text-teal-400", iconBg: "bg-teal-500/15", badge: "bg-teal-500/20 text-teal-300" },
+  yellow: { bg: "bg-yellow-500/10", border: "border-yellow-500/20", text: "text-yellow-400", iconBg: "bg-yellow-500/15", badge: "bg-yellow-500/20 text-yellow-300" },
+  orange: { bg: "bg-orange-500/10", border: "border-orange-500/20", text: "text-orange-400", iconBg: "bg-orange-500/15", badge: "bg-orange-500/20 text-orange-300" },
+  lime: { bg: "bg-lime-500/10", border: "border-lime-500/20", text: "text-lime-400", iconBg: "bg-lime-500/15", badge: "bg-lime-500/20 text-lime-300" },
+};
+---
+
+<Layout title="Templates — Folium">
+  <Nav />
+  
+  <main class="pt-24 pb-20">
+    <!-- Hero -->
+    <section class="max-w-6xl mx-auto px-6 mb-16 text-center">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-medium mb-6">
+        11 Production-Ready Templates
+      </span>
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Template <span class="gradient-text">Gallery</span>
+      </h1>
+      <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+        Pre-built JSON templates for common document types. Drop them into Folium and generate pixel-perfect PDFs in milliseconds.
+      </p>
+    </section>
+
+    <!-- Grid -->
+    <section class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-children">
+        {templates.map((t) => {
+          const c = colorMap[t.color];
+          return (
+            <div class={`animate-on-scroll group relative rounded-2xl border ${c.border} ${c.bg} p-6 hover:border-opacity-50 transition-all duration-300 hover:-translate-y-1`}>
+              <!-- Icon & Name -->
+              <div class="flex items-center gap-3 mb-3">
+                <div class={`w-10 h-10 rounded-xl ${c.iconBg} flex items-center justify-center text-xl`}>
+                  {t.icon}
+                </div>
+                <h3 class="text-lg font-semibold text-white">{t.name}</h3>
+              </div>
+              
+              <!-- Description -->
+              <p class="text-sm text-slate-400 mb-4 leading-relaxed">{t.description}</p>
+
+              <!-- Preview placeholder -->
+              <div class={`rounded-lg border ${c.border} bg-slate-900/50 p-4 mb-4`}>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-2 h-2 rounded-full bg-red-400/60"></div>
+                  <div class="w-2 h-2 rounded-full bg-yellow-400/60"></div>
+                  <div class="w-2 h-2 rounded-full bg-green-400/60"></div>
+                  <span class="text-xs text-slate-500 ml-auto font-mono">{t.slug}/data.json</span>
+                </div>
+                <div class="space-y-1.5">
+                  <div class="h-2 bg-slate-700/50 rounded w-3/4"></div>
+                  <div class="h-2 bg-slate-700/50 rounded w-1/2"></div>
+                  <div class="h-2 bg-slate-700/50 rounded w-5/6"></div>
+                  <div class="h-2 bg-slate-700/50 rounded w-2/3"></div>
+                </div>
+              </div>
+
+              <!-- JSON Toggle -->
+              <details class="group/json">
+                <summary class={`flex items-center gap-2 text-sm ${c.text} cursor-pointer hover:underline font-medium`}>
+                  <svg class="w-4 h-4 transition-transform group-open/json:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5l7 7-7 7"/>
+                  </svg>
+                  View JSON Structure
+                </summary>
+                <div class="mt-3 rounded-lg bg-slate-900/80 border border-slate-700/50 overflow-hidden">
+                  <pre class="p-4 text-xs text-slate-300 overflow-x-auto font-mono leading-relaxed"><code>{t.json}</code></pre>
+                </div>
+              </details>
+
+              <!-- GitHub link -->
+              <a
+                href={`https://github.com/gpradofe/pdfGenerator/tree/main/examples/${t.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class={`mt-4 inline-flex items-center gap-1.5 text-sm ${c.text} hover:underline font-medium`}
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                Full Example on GitHub
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-3xl mx-auto px-6 mt-20 text-center">
+      <div class="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-10">
+        <h2 class="text-2xl font-bold mb-3">Ready to generate PDFs?</h2>
+        <p class="text-slate-400 mb-6">Pick a template, customize the JSON, and get a pixel-perfect PDF in under 100ms.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="/folium-site/" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-6 py-3 rounded-lg transition">
+            Get Started Free
+          </a>
+          <a href="https://github.com/gpradofe/pdfGenerator/tree/main/examples" target="_blank" class="border border-slate-600 hover:border-slate-500 text-white font-semibold px-6 py-3 rounded-lg transition">
+            Browse on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
