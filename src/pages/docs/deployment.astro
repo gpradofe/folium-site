@@ -1,0 +1,240 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL ?? '/folium-site';
+---
+<Layout title="Deployment Guide — Folium">
+  <div class="min-h-screen bg-slate-950 text-slate-200">
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href={`${base}/`} class="text-xl font-bold text-white">
+          <span class="text-cyan-400">◈</span> Folium
+        </a>
+        <nav class="flex gap-6 text-sm">
+          <a href={`${base}/`} class="text-slate-400 hover:text-white transition-colors">Home</a>
+          <a href={`${base}/docs/getting-started`} class="text-slate-400 hover:text-white transition-colors">Getting Started</a>
+          <a href={`${base}/docs/template-guide`} class="text-slate-400 hover:text-white transition-colors">Templates</a>
+          <a href={`${base}/docs/api`} class="text-slate-400 hover:text-white transition-colors">API Reference</a>
+          <a href={`${base}/docs/deployment`} class="text-cyan-400">Deployment</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-2">Deployment Guide</h1>
+      <p class="text-lg text-slate-400 mb-10">Deploy Folium to production with Docker, AWS, or any container platform.</p>
+
+      <!-- TOC -->
+      <nav class="mb-12 p-5 bg-slate-900 border border-slate-800 rounded-lg">
+        <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">On this page</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#docker" class="text-cyan-400 hover:underline">Docker Deployment</a></li>
+          <li><a href="#docker-compose" class="text-cyan-400 hover:underline">Docker Compose</a></li>
+          <li><a href="#aws" class="text-cyan-400 hover:underline">AWS (ECS / Fargate)</a></li>
+          <li><a href="#env-vars" class="text-cyan-400 hover:underline">Environment Variables</a></li>
+        </ul>
+      </nav>
+
+      <!-- Docker -->
+      <section id="docker" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">🐳 Docker Deployment</h2>
+        <p class="text-slate-300 mb-4">The simplest production setup. The Folium image is ~25MB and starts in under 1 second.</p>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`docker run -d \\
+  --name folium \\
+  --restart unless-stopped \\
+  -p 8080:8080 \\
+  -e FOLIUM_API_KEYS="fp_prod_key_1,fp_prod_key_2" \\
+  -e FOLIUM_MAX_CONCURRENT=20 \\
+  -e FOLIUM_REQUEST_TIMEOUT_SECS=30 \\
+  -e FOLIUM_MAX_PAYLOAD_BYTES=10485760 \\
+  -e RUST_LOG=info \\
+  ghcr.io/gpradofe/folium:latest`}</code></pre>
+        </div>
+
+        <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-slate-300 mb-6">
+          <strong class="text-emerald-400">💡 Health checks:</strong> Use <code class="text-cyan-300">GET /health</code> for Docker health checks and load balancer probes.
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <p class="text-sm text-slate-500 mb-2">Dockerfile health check</p>
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`HEALTHCHECK --interval=15s --timeout=3s --retries=3 \\
+  CMD curl -f http://localhost:8080/health || exit 1`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Docker Compose -->
+      <section id="docker-compose" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">Docker Compose</h2>
+        <p class="text-slate-300 mb-4">For local development or simple production setups with a reverse proxy:</p>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <p class="text-sm text-slate-500 mb-2">docker-compose.yml</p>
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`version: "3.8"
+services:
+  folium:
+    image: ghcr.io/gpradofe/folium:latest
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      FOLIUM_API_KEYS: \${FOLIUM_API_KEYS}
+      FOLIUM_MAX_CONCURRENT: "20"
+      FOLIUM_REQUEST_TIMEOUT_SECS: "30"
+      FOLIUM_MAX_PAYLOAD_BYTES: "10485760"
+      RUST_LOG: "info"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+
+  # Optional: Nginx reverse proxy with TLS
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - folium`}</code></pre>
+        </div>
+      </section>
+
+      <!-- AWS -->
+      <section id="aws" class="mb-16">
+        <h2 class="text-3xl font-bold text-white mb-6">☁️ AWS (ECS / Fargate)</h2>
+        <p class="text-slate-300 mb-6">Deploy Folium as a serverless container on AWS Fargate. No EC2 instances to manage.</p>
+
+        <h3 class="text-xl font-semibold text-white mb-4">Task Definition</h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto mb-6">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`{
+  "family": "folium",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "folium",
+      "image": "ghcr.io/gpradofe/folium:latest",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "FOLIUM_MAX_CONCURRENT", "value": "20" },
+        { "name": "RUST_LOG", "value": "info" }
+      ],
+      "secrets": [
+        {
+          "name": "FOLIUM_API_KEYS",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:ACCOUNT:secret:folium/api-keys"
+        }
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"],
+        "interval": 15,
+        "timeout": 3,
+        "retries": 3,
+        "startPeriod": 5
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/folium",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "folium"
+        }
+      }
+    }
+  ]
+}`}</code></pre>
+        </div>
+
+        <h3 class="text-xl font-semibold text-white mb-4">Recommended Architecture</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg text-center">
+            <div class="text-2xl mb-2">🌐</div>
+            <h4 class="text-white font-semibold text-sm">ALB</h4>
+            <p class="text-xs text-slate-400 mt-1">Application Load Balancer with TLS termination</p>
+          </div>
+          <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg text-center">
+            <div class="text-2xl mb-2">📦</div>
+            <h4 class="text-white font-semibold text-sm">ECS Fargate</h4>
+            <p class="text-xs text-slate-400 mt-1">2–10 tasks with auto-scaling on CPU/memory</p>
+          </div>
+          <div class="p-4 bg-slate-900 border border-slate-800 rounded-lg text-center">
+            <div class="text-2xl mb-2">🔐</div>
+            <h4 class="text-white font-semibold text-sm">Secrets Manager</h4>
+            <p class="text-xs text-slate-400 mt-1">API keys stored securely, rotated automatically</p>
+          </div>
+        </div>
+
+        <h3 class="text-xl font-semibold text-white mb-4">Auto-Scaling Policy</h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`aws application-autoscaling register-scalable-target \\
+  --service-namespace ecs \\
+  --resource-id service/folium-cluster/folium-service \\
+  --scalable-dimension ecs:service:DesiredCount \\
+  --min-capacity 2 \\
+  --max-capacity 10
+
+aws application-autoscaling put-scaling-policy \\
+  --service-namespace ecs \\
+  --resource-id service/folium-cluster/folium-service \\
+  --scalable-dimension ecs:service:DesiredCount \\
+  --policy-name folium-cpu-scaling \\
+  --policy-type TargetTrackingScaling \\
+  --target-tracking-scaling-policy-configuration '{
+    "TargetValue": 60.0,
+    "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ECSServiceAverageCPUUtilization"
+    },
+    "ScaleInCooldown": 120,
+    "ScaleOutCooldown": 60
+  }'`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Environment Variables -->
+      <section id="env-vars" class="mb-12">
+        <h2 class="text-3xl font-bold text-white mb-6">Environment Variables</h2>
+        <p class="text-slate-300 mb-4">Complete reference of all configuration options:</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-800/50">
+              <tr>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Variable</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Default</th>
+                <th class="text-left px-4 py-2 text-slate-400 font-medium">Description</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_API_KEYS</td><td class="px-4 py-2 text-slate-400">—</td><td class="px-4 py-2">Comma-separated API keys. Unset = auth disabled.</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_PORT</td><td class="px-4 py-2 text-slate-400">8080</td><td class="px-4 py-2">HTTP server port</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_HOST</td><td class="px-4 py-2 text-slate-400">0.0.0.0</td><td class="px-4 py-2">Bind address</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_MAX_CONCURRENT</td><td class="px-4 py-2 text-slate-400">10</td><td class="px-4 py-2">Max concurrent render jobs</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_REQUEST_TIMEOUT_SECS</td><td class="px-4 py-2 text-slate-400">30</td><td class="px-4 py-2">Request timeout in seconds</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_MAX_PAYLOAD_BYTES</td><td class="px-4 py-2 text-slate-400">10485760</td><td class="px-4 py-2">Max request body size (10MB)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_RATE_LIMIT_WINDOW_SECS</td><td class="px-4 py-2 text-slate-400">60</td><td class="px-4 py-2">Rate limit sliding window</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">FOLIUM_CORS_ORIGINS</td><td class="px-4 py-2 text-slate-400">*</td><td class="px-4 py-2">Allowed CORS origins (comma-separated)</td></tr>
+              <tr><td class="px-4 py-2 text-cyan-300 font-mono text-xs">RUST_LOG</td><td class="px-4 py-2 text-slate-400">info</td><td class="px-4 py-2">Log level (trace, debug, info, warn, error)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-8 text-center text-sm text-slate-500">
+      © 2026 Folium. Built with Rust. Fast by default.
+    </footer>
+  </div>
+</Layout>
