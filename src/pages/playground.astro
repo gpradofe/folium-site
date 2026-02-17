@@ -1,0 +1,327 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Playground — Folium">
+  <Nav />
+
+  <main class="pt-20 pb-16 min-h-screen bg-slate-950">
+    <!-- Banner -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+      <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl px-5 py-3 flex items-center gap-3 text-sm text-emerald-300">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0">
+          <path d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
+        </svg>
+        <span>Full WASM generation coming soon — <a href="#beta" class="underline hover:text-white transition">contact us for API access</a></span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold">
+            <span class="gradient-text">Playground</span>
+          </h1>
+          <p class="text-slate-400 text-sm mt-1">Edit JSON templates and preview the PDF output</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <!-- Template selector -->
+          <select id="template-select" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 transition">
+            <option value="invoice">Invoice</option>
+            <option value="resume">Resume</option>
+            <option value="certificate">Certificate</option>
+            <option value="letter">Letter</option>
+          </select>
+          <button id="generate-btn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-5 py-2 rounded-lg transition shadow-lg shadow-emerald-500/20 flex items-center gap-2 text-sm">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Generate PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Split pane -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 h-[calc(100vh-220px)] min-h-[500px]">
+        <!-- Left: Editor -->
+        <div class="flex flex-col bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+          <div class="flex items-center justify-between px-4 py-2 bg-slate-800/50 border-b border-slate-800 text-xs text-slate-400">
+            <span class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500/60"></span>
+              template.json
+            </span>
+            <button id="copy-btn" class="hover:text-white transition flex items-center gap-1">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copy
+            </button>
+          </div>
+          <textarea
+            id="json-editor"
+            class="flex-1 w-full bg-transparent text-emerald-300 font-mono text-sm p-4 resize-none focus:outline-none leading-relaxed"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <!-- Right: Preview -->
+        <div class="flex flex-col bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+          <div class="flex items-center px-4 py-2 bg-slate-800/50 border-b border-slate-800 text-xs text-slate-400">
+            <span class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-blue-500/60"></span>
+              preview.pdf
+            </span>
+          </div>
+          <div id="preview-pane" class="flex-1 flex items-center justify-center p-6 overflow-auto">
+            <div id="preview-content" class="w-full h-full flex items-center justify-center">
+              <div class="text-center text-slate-500">
+                <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-3 opacity-50">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <p class="text-sm">Click <strong>Generate PDF</strong> to preview</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  const templates: Record<string, object> = {
+    invoice: {
+      template: "invoice",
+      metadata: { title: "Invoice #1042", author: "Folium" },
+      styles: {
+        colors: { primary: "#10b981", secondary: "#1e293b", text: "#f8fafc" },
+        fonts: { heading: "Helvetica-Bold", body: "Helvetica" }
+      },
+      header: {
+        company: "Acme Corp",
+        logo_url: "https://via.placeholder.com/120x40/10b981/ffffff?text=ACME",
+        address: "123 Business Ave, Suite 100\nSan Francisco, CA 94102",
+        invoice_number: "INV-1042",
+        date: "2026-02-17",
+        due_date: "2026-03-17"
+      },
+      bill_to: {
+        name: "Jane Smith",
+        company: "Widget Inc",
+        address: "456 Client St\nNew York, NY 10001",
+        email: "jane@widget.co"
+      },
+      items: [
+        { description: "PDF Generation API — Pro Plan", quantity: 1, unit_price: 99.00 },
+        { description: "Additional API calls (10,000)", quantity: 2, unit_price: 25.00 },
+        { description: "Priority support", quantity: 1, unit_price: 49.00 }
+      ],
+      notes: "Payment due within 30 days. Thank you for your business!"
+    },
+    resume: {
+      template: "resume",
+      metadata: { title: "Resume — Alex Johnson", author: "Folium" },
+      styles: {
+        colors: { primary: "#3b82f6", accent: "#1e293b", text: "#0f172a" },
+        fonts: { heading: "Helvetica-Bold", body: "Helvetica" },
+        margin: { top: 40, bottom: 40, left: 50, right: 50 }
+      },
+      personal: {
+        name: "Alex Johnson",
+        title: "Senior Software Engineer",
+        email: "alex@example.com",
+        phone: "+1 (555) 123-4567",
+        location: "San Francisco, CA",
+        linkedin: "linkedin.com/in/alexjohnson",
+        github: "github.com/alexj"
+      },
+      summary: "Experienced software engineer with 8+ years building scalable distributed systems. Passionate about developer tools, API design, and high-performance computing.",
+      experience: [
+        {
+          company: "TechCorp",
+          role: "Senior Software Engineer",
+          period: "2022 — Present",
+          highlights: [
+            "Led migration of PDF pipeline from Java to Rust, reducing latency by 95%",
+            "Designed REST API serving 2M+ requests/day with 99.99% uptime",
+            "Mentored team of 4 junior engineers"
+          ]
+        },
+        {
+          company: "StartupXYZ",
+          role: "Software Engineer",
+          period: "2019 — 2022",
+          highlights: [
+            "Built real-time document collaboration engine",
+            "Implemented CI/CD pipeline reducing deploy times from 45min to 5min"
+          ]
+        }
+      ],
+      education: [
+        { institution: "UC Berkeley", degree: "B.S. Computer Science", year: "2018" }
+      ],
+      skills: ["Rust", "TypeScript", "Python", "AWS", "Kubernetes", "PostgreSQL", "Redis", "gRPC"]
+    },
+    certificate: {
+      template: "certificate",
+      metadata: { title: "Certificate of Completion", author: "Folium" },
+      styles: {
+        colors: { primary: "#f59e0b", accent: "#92400e", background: "#fffbeb", text: "#1c1917" },
+        fonts: { heading: "Times-Bold", body: "Times-Roman" },
+        border: { style: "ornate", color: "#f59e0b", width: 3 }
+      },
+      certificate: {
+        title: "Certificate of Completion",
+        subtitle: "This is proudly presented to",
+        recipient: "Maria Rodriguez",
+        course: "Advanced PDF Generation with Folium",
+        description: "For successfully completing the comprehensive course on modern document generation, API integration, and template design.",
+        date: "February 17, 2026",
+        issuer: "Folium Academy",
+        signature_name: "Dr. Sarah Chen",
+        signature_title: "Director of Education",
+        certificate_id: "CERT-2026-0217-MR"
+      }
+    },
+    letter: {
+      template: "letter",
+      metadata: { title: "Business Letter", author: "Folium" },
+      styles: {
+        colors: { primary: "#6366f1", text: "#1e293b" },
+        fonts: { heading: "Helvetica-Bold", body: "Helvetica" },
+        margin: { top: 60, bottom: 60, left: 60, right: 60 }
+      },
+      sender: {
+        name: "John Mitchell",
+        title: "CEO",
+        company: "Folium Technologies",
+        address: "789 Innovation Blvd\nAustin, TX 78701",
+        email: "john@folium.dev",
+        phone: "+1 (555) 987-6543"
+      },
+      recipient: {
+        name: "Ms. Emily Carter",
+        title: "VP of Engineering",
+        company: "Global Solutions Inc",
+        address: "321 Enterprise Way\nSeattle, WA 98101"
+      },
+      date: "February 17, 2026",
+      subject: "Partnership Proposal — Document Automation",
+      body: [
+        "Dear Ms. Carter,",
+        "I am writing to propose a strategic partnership between Folium Technologies and Global Solutions Inc. Our PDF generation engine, built entirely in Rust, offers sub-100ms document creation that we believe could transform your client reporting workflows.",
+        "Our platform currently serves over 500 companies, generating millions of documents monthly with 99.99% uptime. We offer a simple JSON-to-PDF API that eliminates the need for headless browsers or legacy Java libraries.",
+        "I would welcome the opportunity to schedule a demonstration at your convenience. Please don't hesitate to reach out directly.",
+        "Warm regards,"
+      ],
+      closing: { name: "John Mitchell", title: "CEO, Folium Technologies" }
+    }
+  };
+
+  // Mock preview SVGs for each template
+  const previews: Record<string, string> = {
+    invoice: `<div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md text-slate-800 text-xs leading-relaxed">
+      <div class="flex justify-between items-start mb-6">
+        <div><div class="text-lg font-bold text-emerald-600">ACME CORP</div><div class="text-slate-400 text-[10px]">123 Business Ave, Suite 100</div></div>
+        <div class="text-right"><div class="text-lg font-bold">INVOICE</div><div class="text-slate-400">#INV-1042</div></div>
+      </div>
+      <div class="border-t border-slate-200 pt-3 mb-4"><div class="font-semibold text-slate-500 text-[10px] uppercase mb-1">Bill To</div><div class="font-medium">Jane Smith — Widget Inc</div></div>
+      <table class="w-full mb-4"><thead><tr class="border-b border-slate-200 text-[10px] uppercase text-slate-500"><th class="text-left py-1">Item</th><th class="text-right py-1">Qty</th><th class="text-right py-1">Price</th></tr></thead>
+      <tbody class="text-[11px]"><tr class="border-b border-slate-100"><td class="py-1">PDF Generation API — Pro</td><td class="text-right">1</td><td class="text-right">$99.00</td></tr>
+      <tr class="border-b border-slate-100"><td class="py-1">Additional API calls (10k)</td><td class="text-right">2</td><td class="text-right">$50.00</td></tr>
+      <tr class="border-b border-slate-100"><td class="py-1">Priority support</td><td class="text-right">1</td><td class="text-right">$49.00</td></tr></tbody></table>
+      <div class="text-right font-bold text-base text-emerald-600">Total: $198.00</div>
+    </div>`,
+    resume: `<div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md text-slate-800 text-xs leading-relaxed">
+      <div class="text-center mb-4"><div class="text-xl font-bold">Alex Johnson</div><div class="text-blue-600 font-medium text-sm">Senior Software Engineer</div><div class="text-slate-400 text-[10px] mt-1">alex@example.com · San Francisco, CA</div></div>
+      <div class="border-t border-slate-200 pt-3 mb-3"><div class="font-bold text-blue-600 text-[10px] uppercase mb-1">Experience</div>
+      <div class="mb-2"><div class="font-semibold">Senior Software Engineer · TechCorp</div><div class="text-slate-400 text-[10px]">2022 — Present</div><div class="text-slate-600 mt-0.5">• Led Rust migration, 95% latency reduction</div></div>
+      <div><div class="font-semibold">Software Engineer · StartupXYZ</div><div class="text-slate-400 text-[10px]">2019 — 2022</div><div class="text-slate-600 mt-0.5">• Built real-time collaboration engine</div></div></div>
+      <div class="border-t border-slate-200 pt-3 mb-3"><div class="font-bold text-blue-600 text-[10px] uppercase mb-1">Skills</div><div class="flex flex-wrap gap-1"><span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">Rust</span><span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">TypeScript</span><span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">Python</span><span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">AWS</span><span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">K8s</span></div></div>
+    </div>`,
+    certificate: `<div class="bg-amber-50 rounded-lg shadow-2xl p-8 w-full max-w-md text-center border-4 border-amber-400">
+      <div class="text-amber-600 text-[10px] uppercase tracking-[0.3em] mb-2">Folium Academy</div>
+      <div class="text-2xl font-bold text-amber-900 font-serif mb-1">Certificate of Completion</div>
+      <div class="text-slate-500 text-xs mb-4">This is proudly presented to</div>
+      <div class="text-xl font-bold text-amber-800 font-serif border-b-2 border-amber-300 inline-block px-6 pb-1 mb-3">Maria Rodriguez</div>
+      <div class="text-slate-600 text-xs mb-4 max-w-xs mx-auto">For successfully completing Advanced PDF Generation with Folium</div>
+      <div class="flex justify-between items-end mt-6 text-[10px] text-slate-500"><div>February 17, 2026</div><div class="text-center"><div class="border-t border-slate-300 pt-1 px-4">Dr. Sarah Chen</div><div class="text-[9px]">Director of Education</div></div></div>
+    </div>`,
+    letter: `<div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-md text-slate-800 text-xs leading-relaxed">
+      <div class="mb-4"><div class="font-bold text-indigo-600">Folium Technologies</div><div class="text-[10px] text-slate-400">789 Innovation Blvd, Austin, TX 78701</div></div>
+      <div class="text-slate-400 text-[10px] mb-4">February 17, 2026</div>
+      <div class="mb-4"><div class="font-medium">Ms. Emily Carter</div><div class="text-slate-400 text-[10px]">VP of Engineering, Global Solutions Inc</div></div>
+      <div class="font-semibold text-sm mb-3">Re: Partnership Proposal — Document Automation</div>
+      <div class="space-y-2 text-slate-600">
+        <p>Dear Ms. Carter,</p>
+        <p>I am writing to propose a strategic partnership between Folium Technologies and Global Solutions Inc. Our PDF generation engine offers sub-100ms document creation...</p>
+        <p>Our platform currently serves over 500 companies with 99.99% uptime.</p>
+        <p>Warm regards,</p>
+      </div>
+      <div class="mt-4 font-semibold">John Mitchell<div class="font-normal text-slate-400 text-[10px]">CEO, Folium Technologies</div></div>
+    </div>`
+  };
+
+  const editor = document.getElementById('json-editor') as HTMLTextAreaElement;
+  const select = document.getElementById('template-select') as HTMLSelectElement;
+  const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+  const previewContent = document.getElementById('preview-content') as HTMLDivElement;
+  const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+
+  function loadTemplate(name: string) {
+    const t = templates[name];
+    if (t) editor.value = JSON.stringify(t, null, 2);
+  }
+
+  function showPreview(name: string) {
+    const html = previews[name];
+    if (html) {
+      previewContent.innerHTML = html;
+    }
+  }
+
+  // Init
+  loadTemplate('invoice');
+
+  select.addEventListener('change', () => {
+    loadTemplate(select.value);
+    // Clear preview on template change
+    previewContent.innerHTML = `<div class="text-center text-slate-500">
+      <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="mx-auto mb-3 opacity-50">
+        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <p class="text-sm">Click <strong>Generate PDF</strong> to preview</p>
+    </div>`;
+  });
+
+  generateBtn.addEventListener('click', () => {
+    // Validate JSON
+    try {
+      JSON.parse(editor.value);
+    } catch {
+      previewContent.innerHTML = `<div class="text-center text-red-400"><svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="mx-auto mb-2"><path d="M12 9v2m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg><p class="text-sm font-medium">Invalid JSON</p><p class="text-xs text-slate-500 mt-1">Fix syntax errors and try again</p></div>`;
+      return;
+    }
+
+    // Show loading then preview
+    previewContent.innerHTML = `<div class="text-center text-emerald-400"><div class="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-3"></div><p class="text-sm">Generating preview…</p></div>`;
+
+    setTimeout(() => {
+      showPreview(select.value);
+    }, 600);
+  });
+
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(editor.value);
+    copyBtn.innerHTML = `<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Copied!`;
+    setTimeout(() => {
+      copyBtn.innerHTML = `<svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+    }, 2000);
+  });
+</script>
