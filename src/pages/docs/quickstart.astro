@@ -1,0 +1,206 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const base = import.meta.env.BASE_URL ?? '/folium-site';
+---
+<Layout title="Quickstart — Folium API">
+  <div class="min-h-screen bg-slate-950 text-slate-200">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href={`${base}/`} class="text-xl font-bold text-white">
+          <span class="text-cyan-400">◈</span> Folium
+        </a>
+        <nav class="flex gap-6 text-sm">
+          <a href={`${base}/`} class="text-slate-400 hover:text-white transition-colors">Home</a>
+          <a href={`${base}/docs/quickstart`} class="text-cyan-400">Quickstart</a>
+          <a href={`${base}/docs`} class="text-slate-400 hover:text-white transition-colors">API Reference</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-4xl font-bold text-white mb-2">Getting Started</h1>
+      <p class="text-lg text-slate-400 mb-10">Generate your first PDF in under 5 minutes.</p>
+
+      <!-- Step 1 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">1</span>
+          <h2 class="text-2xl font-semibold text-white">Get your API key</h2>
+        </div>
+        <p class="text-slate-300 ml-11 mb-4">
+          Sign up at <a href="https://folium.cc" class="text-cyan-400 hover:underline">folium.cc</a> to get your API key.
+          Keys are prefixed with <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300 text-sm">fp_</code>.
+        </p>
+        <div class="ml-11 bg-slate-900 border border-slate-800 rounded-lg p-4">
+          <p class="text-sm text-slate-500 mb-1">.env</p>
+          <code class="text-green-400 text-sm">FOLIUM_API_KEY=fp_your_api_key_here</code>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">2</span>
+          <h2 class="text-2xl font-semibold text-white">Generate your first PDF</h2>
+        </div>
+        <p class="text-slate-300 ml-11 mb-4">
+          Send a POST request to the <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300 text-sm">/v1/generate</code> endpoint with a template and data:
+        </p>
+        <div class="ml-11 bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+          <p class="text-sm text-slate-500 mb-2">cURL</p>
+          <pre class="text-sm text-slate-200 whitespace-pre"><code>{`curl -X POST https://api.folium.cc/v1/generate \\
+  -H "Authorization: Bearer fp_your_api_key_here" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "template": {
+      "name": "hello",
+      "template": {
+        "type": "container",
+        "children": [
+          {
+            "type": "text",
+            "content": "Hello {{name}}!",
+            "style": { "fontSize": 24, "fontWeight": "bold" }
+          },
+          {
+            "type": "text",
+            "content": "Generated at {{date}}",
+            "style": { "fontSize": 14, "color": "#666" }
+          }
+        ]
+      }
+    },
+    "data": {
+      "name": "World",
+      "date": "2024-02-10"
+    },
+    "options": {
+      "filename": "hello.pdf"
+    }
+  }' \\
+  --output hello.pdf`}</code></pre>
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="mb-12">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">3</span>
+          <h2 class="text-2xl font-semibold text-white">Use in your app</h2>
+        </div>
+
+        <!-- Node.js -->
+        <div class="ml-11 mb-6">
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+            <p class="text-sm text-slate-500 mb-2">Node.js / TypeScript</p>
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`const response = await fetch("https://api.folium.cc/v1/generate", {
+  method: "POST",
+  headers: {
+    "Authorization": \`Bearer \${process.env.FOLIUM_API_KEY}\`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    template: {
+      name: "invoice",
+      template: {
+        type: "container",
+        children: [
+          { type: "text", content: "Invoice #{{id}}", style: { fontSize: 24 } },
+          { type: "text", content: "Total: \${{total}}", style: { fontSize: 18 } },
+        ],
+      },
+    },
+    data: { id: "INV-001", total: "150.00" },
+    options: { filename: "invoice.pdf" },
+  }),
+});
+
+const pdf = Buffer.from(await response.arrayBuffer());
+// pdf is ready — save, stream, or attach to email`}</code></pre>
+          </div>
+        </div>
+
+        <!-- Python -->
+        <div class="ml-11">
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-4 overflow-x-auto">
+            <p class="text-sm text-slate-500 mb-2">Python</p>
+            <pre class="text-sm text-slate-200 whitespace-pre"><code>{`import requests, os
+
+resp = requests.post(
+    "https://api.folium.cc/v1/generate",
+    headers={"Authorization": f"Bearer {os.environ['FOLIUM_API_KEY']}"},
+    json={
+        "template": {
+            "name": "report",
+            "template": {
+                "type": "text",
+                "content": "Hello {{name}}!",
+                "style": {"fontSize": 20}
+            }
+        },
+        "data": {"name": "World"},
+        "options": {"filename": "report.pdf"}
+    }
+)
+
+with open("report.pdf", "wb") as f:
+    f.write(resp.content)`}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Response info -->
+      <section class="mb-12">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-sm font-bold">4</span>
+          <h2 class="text-2xl font-semibold text-white">Understand the response</h2>
+        </div>
+        <div class="ml-11 space-y-4">
+          <p class="text-slate-300">
+            A successful <code class="bg-slate-800 px-2 py-0.5 rounded text-cyan-300 text-sm">200</code> response returns raw PDF bytes with these headers:
+          </p>
+          <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-slate-800/50">
+                <tr>
+                  <th class="text-left px-4 py-2 text-slate-400 font-medium">Header</th>
+                  <th class="text-left px-4 py-2 text-slate-400 font-medium">Description</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800">
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">Content-Type</td><td class="px-4 py-2">application/pdf</td></tr>
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">Content-Disposition</td><td class="px-4 py-2">attachment; filename="your-file.pdf"</td></tr>
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">X-Folium-Render-Time-Ms</td><td class="px-4 py-2">Time taken to render (typically &lt;100ms)</td></tr>
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">X-Folium-Size-Bytes</td><td class="px-4 py-2">PDF file size in bytes</td></tr>
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">X-RateLimit-Limit</td><td class="px-4 py-2">Max requests per rate limit window</td></tr>
+                <tr><td class="px-4 py-2 text-cyan-300 font-mono">X-RateLimit-Remaining</td><td class="px-4 py-2">Remaining requests in current window</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Next steps -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold text-white mb-4">Next steps</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a href={`${base}/docs`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">📖 API Reference</h3>
+            <p class="text-sm text-slate-400">Full endpoint documentation with schemas and examples.</p>
+          </a>
+          <a href={`${base}/docs`} class="block p-5 bg-slate-900 border border-slate-800 rounded-lg hover:border-cyan-500/50 transition-colors">
+            <h3 class="text-white font-semibold mb-1">📊 Usage & Billing</h3>
+            <p class="text-sm text-slate-400">Monitor your API usage and manage your subscription.</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-8 text-center text-sm text-slate-500">
+      © 2024 Folium. Built with Rust. Fast by default.
+    </footer>
+  </div>
+</Layout>
