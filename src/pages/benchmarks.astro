@@ -4,7 +4,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 ---
 
-<Layout title="Performance Benchmarks — Folium vs Puppeteer, WeasyPrint & iText">
+<Layout title="Benchmarks — Folium vs Puppeteer, WeasyPrint & iText">
   <Nav />
   <main class="pt-24 pb-20">
     <!-- Hero -->
@@ -12,108 +12,66 @@ import Footer from '../components/Footer.astro';
       <div class="animate-on-scroll">
         <span class="inline-block text-emerald-400 text-sm font-semibold tracking-wider uppercase mb-4">Performance</span>
         <h1 class="text-4xl md:text-6xl font-extrabold mb-6">
-          Performance <span class="gradient-text">Benchmarks</span>
+          Built for <span class="gradient-text">Performance</span>
         </h1>
         <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-          Folium is a Rust-native PDF engine — no headless browsers, no JVM warm-up, no bloated containers. Here's how it stacks up against the competition.
+          Folium is a Rust-native PDF engine — no headless browsers, no JVM warm-up, no bloated containers. Here's how it stacks up.
         </p>
       </div>
     </section>
 
-    <!-- Speed Comparison Table -->
+    <!-- Benchmark Table -->
     <section class="max-w-6xl mx-auto px-6 mb-20">
-      <div class="animate-on-scroll">
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">Speed Comparison</h2>
-        <p class="text-slate-400 mb-8">End-to-end PDF generation time across different workloads.</p>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-slate-800">
-                <th class="py-4 pr-6 text-slate-400 font-medium text-sm">Workload</th>
-                <th class="py-4 px-6 text-emerald-400 font-semibold">Folium (Rust)</th>
-                <th class="py-4 px-6 text-slate-300 font-medium">Puppeteer</th>
-                <th class="py-4 px-6 text-slate-300 font-medium">WeasyPrint</th>
-                <th class="py-4 px-6 text-slate-300 font-medium">iText (Java)</th>
-              </tr>
-            </thead>
-            <tbody class="text-sm">
-              <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
-                <td class="py-4 pr-6 text-slate-300">Simple invoice (1 page)</td>
-                <td class="py-4 px-6 text-emerald-400 font-semibold">~15 ms</td>
-                <td class="py-4 px-6 text-slate-400">~800 ms</td>
-                <td class="py-4 px-6 text-slate-400">~1.2 s</td>
-                <td class="py-4 px-6 text-slate-400">~50 ms</td>
-              </tr>
-              <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
-                <td class="py-4 pr-6 text-slate-300">Complex report (10 pages)</td>
-                <td class="py-4 px-6 text-emerald-400 font-semibold">~85 ms</td>
-                <td class="py-4 px-6 text-slate-400">~3.5 s</td>
-                <td class="py-4 px-6 text-slate-400">~5 s</td>
-                <td class="py-4 px-6 text-slate-400">~250 ms</td>
-              </tr>
-              <tr class="hover:bg-slate-900/50 transition">
-                <td class="py-4 pr-6 text-slate-300">Batch 100 documents</td>
-                <td class="py-4 px-6 text-emerald-400 font-semibold">~1.2 s</td>
-                <td class="py-4 px-6 text-slate-400">~45 s</td>
-                <td class="py-4 px-6 text-slate-400">~60 s</td>
-                <td class="py-4 px-6 text-slate-400">~8 s</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="text-xs text-slate-600 mt-4">* Approximate figures based on internal benchmarks. Single-threaded, warm cache. Your results may vary.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Memory Usage -->
-    <section class="max-w-6xl mx-auto px-6 mb-20">
-      <div class="animate-on-scroll">
-        <h2 class="text-2xl md:text-3xl font-bold mb-2">Memory Usage</h2>
-        <p class="text-slate-400 mb-8">Peak resident memory during a 10-page report generation.</p>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="bg-slate-900/50 border border-emerald-500/30 rounded-2xl p-8 text-center">
-            <div class="text-4xl font-extrabold gradient-text mb-2">~12 MB</div>
-            <div class="text-lg font-semibold text-white mb-1">Folium</div>
-            <p class="text-slate-400 text-sm">Rust's zero-cost abstractions keep memory lean and predictable.</p>
-          </div>
-          <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center hover:border-slate-700 transition">
-            <div class="text-4xl font-extrabold text-slate-400 mb-2">~80 MB</div>
-            <div class="text-lg font-semibold text-white mb-1">WeasyPrint</div>
-            <p class="text-slate-400 text-sm">Python runtime plus Cairo rendering engine overhead.</p>
-          </div>
-          <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center hover:border-slate-700 transition">
-            <div class="text-4xl font-extrabold text-slate-400 mb-2">~150 MB</div>
-            <div class="text-lg font-semibold text-white mb-1">Puppeteer</div>
-            <p class="text-slate-400 text-sm">Headless Chromium requires a full browser process per render.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why Rust? -->
-    <section class="max-w-6xl mx-auto px-6 mb-20">
-      <div class="animate-on-scroll bg-gradient-to-br from-emerald-500/10 to-slate-900/50 border border-emerald-500/20 rounded-2xl p-10 md:p-14">
-        <h2 class="text-2xl md:text-3xl font-bold mb-6">Why Rust?</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <div>
-            <div class="text-emerald-400 text-lg font-semibold mb-2">Zero-Copy Parsing</div>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              Folium processes your JSON templates without unnecessary memory allocations. Data flows from input to PDF bytes with minimal copying, keeping throughput high and latency low.
-            </p>
-          </div>
-          <div>
-            <div class="text-emerald-400 text-lg font-semibold mb-2">No GC Pauses</div>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              Unlike Java or Python-based tools, Rust has no garbage collector. Memory is freed deterministically at compile time, so you never hit unpredictable latency spikes under load.
-            </p>
-          </div>
-          <div>
-            <div class="text-emerald-400 text-lg font-semibold mb-2">Tiny Footprint</div>
-            <p class="text-slate-400 text-sm leading-relaxed">
-              The compiled binary is a few megabytes — no runtime, no VM, no browser. Deploy as a single static binary to serverless, edge, or embedded environments in seconds.
-            </p>
-          </div>
-        </div>
+      <div class="animate-on-scroll overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800">
+              <th class="py-4 pr-6 text-slate-400 font-medium text-sm">Metric</th>
+              <th class="py-4 px-6 text-emerald-400 font-semibold">Folium (Rust)</th>
+              <th class="py-4 px-6 text-slate-300 font-medium">Puppeteer</th>
+              <th class="py-4 px-6 text-slate-300 font-medium">WeasyPrint</th>
+              <th class="py-4 px-6 text-slate-300 font-medium">iText (Java)</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm">
+            <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
+              <td class="py-4 pr-6 text-slate-300">Simple invoice generation</td>
+              <td class="py-4 px-6 text-emerald-400 font-semibold">~12 ms</td>
+              <td class="py-4 px-6 text-slate-400">~120 ms</td>
+              <td class="py-4 px-6 text-slate-400">~280 ms</td>
+              <td class="py-4 px-6 text-slate-400">~45 ms</td>
+            </tr>
+            <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
+              <td class="py-4 pr-6 text-slate-300">200-page report</td>
+              <td class="py-4 px-6 text-emerald-400 font-semibold">~95 ms</td>
+              <td class="py-4 px-6 text-slate-400">~1,800 ms</td>
+              <td class="py-4 px-6 text-slate-400">~3,200 ms</td>
+              <td class="py-4 px-6 text-slate-400">~320 ms</td>
+            </tr>
+            <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
+              <td class="py-4 pr-6 text-slate-300">Memory usage (peak)</td>
+              <td class="py-4 px-6 text-emerald-400 font-semibold">~18 MB</td>
+              <td class="py-4 px-6 text-slate-400">~220 MB</td>
+              <td class="py-4 px-6 text-slate-400">~85 MB</td>
+              <td class="py-4 px-6 text-slate-400">~110 MB</td>
+            </tr>
+            <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
+              <td class="py-4 pr-6 text-slate-300">Docker image size</td>
+              <td class="py-4 px-6 text-emerald-400 font-semibold">~3 MB</td>
+              <td class="py-4 px-6 text-slate-400">~560 MB</td>
+              <td class="py-4 px-6 text-slate-400">~180 MB</td>
+              <td class="py-4 px-6 text-slate-400">~320 MB</td>
+            </tr>
+            <tr class="hover:bg-slate-900/50 transition">
+              <td class="py-4 pr-6 text-slate-300">Cold start time</td>
+              <td class="py-4 px-6 text-emerald-400 font-semibold">~2 ms</td>
+              <td class="py-4 px-6 text-slate-400">~800 ms</td>
+              <td class="py-4 px-6 text-slate-400">~150 ms</td>
+              <td class="py-4 px-6 text-slate-400">~1,200 ms</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-xs text-slate-600 mt-4">* Approximate figures based on internal benchmarks. Single-threaded, warm cache unless noted. Your results may vary.</p>
       </div>
     </section>
 
@@ -121,19 +79,19 @@ import Footer from '../components/Footer.astro';
     <section class="max-w-6xl mx-auto px-6 mb-20">
       <div class="grid md:grid-cols-3 gap-6 stagger-children">
         <div class="animate-on-scroll bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center hover:border-emerald-500/30 transition">
-          <div class="text-5xl font-extrabold gradient-text mb-3">53×</div>
+          <div class="text-5xl font-extrabold gradient-text mb-3">10×</div>
           <div class="text-lg font-semibold text-white mb-2">Faster</div>
-          <p class="text-slate-400 text-sm">than Puppeteer for simple invoices — no browser overhead, just pure Rust PDF generation.</p>
+          <p class="text-slate-400 text-sm">than Puppeteer for simple documents — no browser overhead, just pure Rust PDF generation.</p>
         </div>
         <div class="animate-on-scroll bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center hover:border-emerald-500/30 transition">
-          <div class="text-5xl font-extrabold gradient-text mb-3">12×</div>
+          <div class="text-5xl font-extrabold gradient-text mb-3">5×</div>
           <div class="text-lg font-semibold text-white mb-2">Less Memory</div>
-          <p class="text-slate-400 text-sm">than Puppeteer. No garbage collector pauses, no heap tuning, just predictable performance at scale.</p>
+          <p class="text-slate-400 text-sm">than JVM-based solutions. No garbage collector pauses, no heap tuning, just predictable performance.</p>
         </div>
         <div class="animate-on-scroll bg-slate-900/50 border border-slate-800 rounded-2xl p-8 text-center hover:border-emerald-500/30 transition">
-          <div class="text-5xl font-extrabold gradient-text mb-3">37×</div>
-          <div class="text-lg font-semibold text-white mb-2">Faster Batches</div>
-          <p class="text-slate-400 text-sm">than Puppeteer when processing 100 documents. Scale without scaling your infrastructure.</p>
+          <div class="text-5xl font-extrabold gradient-text mb-3">3 MB</div>
+          <div class="text-lg font-semibold text-white mb-2">Docker Image</div>
+          <p class="text-slate-400 text-sm">vs 500 MB+ for browser-based tools. Deploy anywhere — serverless, edge, embedded — in seconds.</p>
         </div>
       </div>
     </section>
