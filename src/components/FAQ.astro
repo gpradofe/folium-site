@@ -27,6 +27,22 @@ const faqs = [
   {
     q: "Is there an SLA?",
     a: "Enterprise plans include a 99.9% uptime SLA with dedicated support. Pro plans target 99.5% uptime. Status is tracked publicly at status.folium.dev."
+  },
+  {
+    q: "How does Folium compare to wkhtmltopdf?",
+    a: "wkhtmltopdf relies on an outdated WebKit engine and is no longer actively maintained. Folium is purpose-built for PDF generation — no browser engine, no system dependencies. It's 50-100x faster, produces smaller files, and offers a modern API with first-class support for templates, tables, and dynamic data."
+  },
+  {
+    q: "What file formats does Folium support?",
+    a: "Folium outputs PDF (including PDF/A for archival compliance). Input-wise, you can use our JSON-based template format, or convert from HTML. We also support embedding images (PNG, JPEG, SVG, WebP) and fonts (TTF, OTF, WOFF2) directly in your templates."
+  },
+  {
+    q: "Is there a free tier?",
+    a: "Yes! The free tier includes 100 PDFs per month with no credit card required. It's perfect for prototyping, side projects, or evaluating Folium before committing to a paid plan."
+  },
+  {
+    q: "How do I get started?",
+    a: "Install via <code class='text-emerald-300 bg-slate-800 px-1.5 py-0.5 rounded text-xs'>npm install @folium/sdk</code>, grab your free API key from the <a href='/docs' class='text-emerald-400 hover:underline'>docs</a>, and generate your first PDF in under 5 minutes. We have quickstart guides for Node.js, Python, Go, and more."
   }
 ];
 ---
@@ -53,6 +69,25 @@ const faqs = [
           <div class="px-6 pb-5 text-slate-400 leading-relaxed text-sm" set:html={faq.a} />
         </details>
       ))}
+    </div>
+  </div>
+</section>
+
+<!-- Ready to Build CTA -->
+<section class="py-28 px-6">
+  <div class="max-w-3xl mx-auto text-center animate-on-scroll">
+    <h2 class="text-4xl md:text-5xl font-bold mb-5">Ready to build?</h2>
+    <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+      Start generating beautiful PDFs in minutes. Explore the docs or pick a plan that fits your needs.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="/docs" class="group inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-semibold px-8 py-3.5 rounded-xl transition-all hover:shadow-lg hover:shadow-emerald-500/25">
+        Read the Docs
+        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+      </a>
+      <a href="/pricing" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold px-8 py-3.5 rounded-xl transition-all">
+        View Pricing
+      </a>
     </div>
   </div>
 </section>
