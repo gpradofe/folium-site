@@ -1,0 +1,163 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="CLI - Folium" description="Folium CLI documentation — generate PDFs, validate templates, and watch for changes from your terminal.">
+  <Nav />
+
+  <main class="pt-32 pb-24">
+    <!-- Hero -->
+    <section class="max-w-4xl mx-auto px-6 mb-20">
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-medium px-4 py-1.5 rounded-full border border-emerald-500/20 mb-6">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Command Line Interface
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          Folium <span class="text-emerald-400">CLI</span>
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+          Generate PDFs, validate templates, and watch for changes — all from your terminal.
+        </p>
+      </div>
+    </section>
+
+    <!-- Installation -->
+    <section class="max-w-4xl mx-auto px-6 mb-16">
+      <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+        <span class="text-emerald-400">01</span> Installation
+      </h2>
+      <p class="text-slate-400 mb-4">Install the CLI from crates.io with Cargo:</p>
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-sm overflow-x-auto">
+        <span class="text-slate-500">$</span> <span class="text-emerald-400">cargo install</span> folium-cli
+      </div>
+      <p class="text-slate-500 text-sm mt-3">Requires Rust 1.70+. The binary is named <code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">folium-cli</code>.</p>
+    </section>
+
+    <!-- Commands -->
+    <section class="max-w-4xl mx-auto px-6 mb-16">
+      <h2 class="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+        <span class="text-emerald-400">02</span> Commands
+      </h2>
+
+      <!-- Generate -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold text-white mb-2">
+          <code class="text-emerald-400">generate</code>
+          <span class="text-slate-500 text-sm font-normal ml-2">— Render a template to PDF, PNG, or SVG</span>
+        </h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-sm overflow-x-auto mb-4">
+          <div class="text-slate-500 mb-1"># Basic PDF generation</div>
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli generate</span> --template invoice.json --data order.json --output invoice.pdf</div>
+          <div class="mt-3 text-slate-500"># Output as PNG</div>
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli generate</span> -t report.json -d data.json -o report.png --format png</div>
+          <div class="mt-3 text-slate-500"># Batch output to a directory</div>
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli generate</span> -t template.json -d data.json --output-dir ./out</div>
+        </div>
+        <p class="text-sm text-slate-400 mb-2"><strong class="text-white">Flags:</strong></p>
+        <ul class="text-sm text-slate-400 space-y-1.5 ml-4">
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-t, --template &lt;PATH&gt;</code> — Path to the template JSON file (required)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-d, --data &lt;PATH&gt;</code> — Path to the data JSON file (required)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-o, --output &lt;PATH&gt;</code> — Output file path (default: <code>output.pdf</code>)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-f, --format &lt;FORMAT&gt;</code> — Output format: <code>pdf</code>, <code>png</code>, or <code>svg</code> (default: <code>pdf</code>)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">--output-dir &lt;DIR&gt;</code> — Output directory for batch mode (overrides <code>--output</code>)</li>
+        </ul>
+      </div>
+
+      <!-- Watch -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold text-white mb-2">
+          <code class="text-emerald-400">watch</code>
+          <span class="text-slate-500 text-sm font-normal ml-2">— Auto-rebuild on file changes</span>
+        </h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-sm overflow-x-auto mb-4">
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli watch</span> --template invoice.json --data order.json --output invoice.pdf</div>
+          <div class="mt-2 text-slate-500"># Watches both template and data files, rebuilds with 300ms debounce</div>
+          <div class="mt-1 text-slate-500"># Press Ctrl+C to stop</div>
+        </div>
+        <p class="text-sm text-slate-400 mb-2"><strong class="text-white">Flags:</strong></p>
+        <ul class="text-sm text-slate-400 space-y-1.5 ml-4">
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-t, --template &lt;PATH&gt;</code> — Path to the template JSON file (required)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-d, --data &lt;PATH&gt;</code> — Path to the data JSON file (required)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-o, --output &lt;PATH&gt;</code> — Output file path (default: <code>output.pdf</code>)</li>
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-f, --format &lt;FORMAT&gt;</code> — Output format: <code>pdf</code>, <code>png</code>, or <code>svg</code> (default: <code>pdf</code>)</li>
+        </ul>
+      </div>
+
+      <!-- Validate -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold text-white mb-2">
+          <code class="text-emerald-400">validate</code>
+          <span class="text-slate-500 text-sm font-normal ml-2">— Check a template without generating output</span>
+        </h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-sm overflow-x-auto mb-4">
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli validate</span> --template invoice.json</div>
+          <div class="mt-2 text-emerald-400/70">✓ Template is valid: invoice.json</div>
+        </div>
+        <p class="text-sm text-slate-400 mb-2"><strong class="text-white">Flags:</strong></p>
+        <ul class="text-sm text-slate-400 space-y-1.5 ml-4">
+          <li><code class="text-slate-300 bg-slate-800 px-1.5 py-0.5 rounded">-t, --template &lt;PATH&gt;</code> — Path to the template JSON file (required)</li>
+        </ul>
+      </div>
+
+      <!-- Templates -->
+      <div class="mb-10">
+        <h3 class="text-xl font-semibold text-white mb-2">
+          <code class="text-emerald-400">templates</code>
+          <span class="text-slate-500 text-sm font-normal ml-2">— List available template types</span>
+        </h3>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 font-mono text-sm overflow-x-auto mb-4">
+          <div><span class="text-slate-500">$</span> <span class="text-emerald-400">folium-cli templates</span></div>
+          <div class="mt-2">
+            <div class="text-white font-semibold">Available template types:</div>
+            <div class="mt-1">
+              <div>  <span class="text-cyan-400">document</span>  <span class="text-slate-500">— Basic document with text content</span></div>
+              <div>  <span class="text-cyan-400">invoice</span>   <span class="text-slate-500">— Invoice with line items and totals</span></div>
+              <div>  <span class="text-cyan-400">report</span>    <span class="text-slate-500">— Multi-section report with headers/footers</span></div>
+              <div>  <span class="text-cyan-400">table</span>     <span class="text-slate-500">— Tabular data layout</span></div>
+              <div>  <span class="text-cyan-400">letter</span>    <span class="text-slate-500">— Formal letter format</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Reference -->
+    <section class="max-w-4xl mx-auto px-6 mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+        <span class="text-emerald-400">03</span> Quick Reference
+      </h2>
+      <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-6">
+        <div class="font-mono text-sm space-y-3 text-slate-400">
+          <div><span class="text-emerald-400">folium-cli generate</span> -t &lt;TPL&gt; -d &lt;DATA&gt; [-o &lt;OUT&gt;] [-f pdf|png|svg] [--output-dir &lt;DIR&gt;]</div>
+          <div><span class="text-emerald-400">folium-cli watch</span>    -t &lt;TPL&gt; -d &lt;DATA&gt; [-o &lt;OUT&gt;] [-f pdf|png|svg]</div>
+          <div><span class="text-emerald-400">folium-cli validate</span> -t &lt;TPL&gt;</div>
+          <div><span class="text-emerald-400">folium-cli templates</span></div>
+          <div><span class="text-emerald-400">folium-cli --help</span></div>
+          <div><span class="text-emerald-400">folium-cli --version</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="max-w-4xl mx-auto px-6 text-center">
+      <div class="bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-2xl p-10">
+        <h2 class="text-2xl font-bold text-white mb-3">Ready to get started?</h2>
+        <p class="text-slate-400 mb-6">Install the CLI and generate your first PDF in under a minute.</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 font-mono text-sm inline-block mb-6">
+          <span class="text-slate-500">$</span> <span class="text-emerald-400">cargo install</span> folium-cli
+        </div>
+        <div>
+          <a href="/folium-site/docs/getting-started" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-6 py-3 rounded-lg transition shadow-lg shadow-emerald-500/20">
+            Read the Docs
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
