@@ -1,11 +1,19 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
 }
-const { title } = Astro.props;
-const description = "Generate PDFs from JSON templates in under 100ms. Built in Rust. No headless browsers, no Java, no legacy — just speed. Free tier available.";
-const url = "https://gpradofe.github.io/folium-site/";
-const ogImage = `${url}og-image.png`;
+const {
+  title,
+  description = "Generate PDFs from JSON templates in under 100ms. Built in Rust. No headless browsers, no Java, no legacy — just speed. Free tier available.",
+  canonicalUrl,
+  ogImage: ogImageProp,
+} = Astro.props;
+const siteUrl = "https://gpradofe.github.io/folium-site/";
+const url = canonicalUrl ?? siteUrl;
+const ogImage = ogImageProp ?? `${siteUrl}og-image.png`;
 ---
 <!doctype html>
 <html lang="en" class="dark">
